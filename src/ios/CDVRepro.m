@@ -7,7 +7,6 @@
 
 #import "CDVRepro.h"
 #import "Repro/Repro.h"
-#import "AppDelegate.h"
 
 @implementation CDVRepro
 

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    id="io.repro.cordova"
+    version="0.0.1">
+    <name>Repro</name>
+    <description>Repro Cordova Plugin</description>
+    <license>Commercial</license>
+    <keywords>repro,analytics</keywords>
+
+    <js-module src="www/Repro.js" name="Repro">
+        <clobbers target="Repro" />
+    </js-module>
+    
+    <!-- ios -->
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="Repro">
+                <param name="ios-package" value="CDVRepro"/>
+            </feature>
+        </config-file>
+        
+        <header-file src="src/ios/CDVRepro.h" />
+        <source-file src="src/ios/CDVRepro.m" />
+        
+        <framework src="AVFoundation.framework" />
+        <framework src="CoreGraphics.framework" />
+        <framework src="CoreMedia.framework" />
+        <framework src="CoreVideo.framework" />
+        <framework src="Foundation.framework" />
+        <framework src="UIKit.framework" />
+        
+        <framework src="src/ios/Repro.embeddedframework/Repro.framework" custom="true" />
+    </platform>
+
+</plugin>

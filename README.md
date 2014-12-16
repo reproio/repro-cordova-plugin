@@ -17,7 +17,7 @@ cordova plugin add io.repro.cordova
 ```
 onDeviceReady: function() {
     app.receivedEvent('deviceready');
-    Repro.setUp("YOUR_APP_TOKEN");
+    Repro.setup("YOUR_APP_TOKEN");
     Repro.startRecording();
 },
 ```

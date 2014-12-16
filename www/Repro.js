@@ -2,8 +2,8 @@ var exec = require('cordova/exec');
 
 function Repro(){};
 
-Repro.prototype.setUp = function(key, successCallback, errorCallback) {
-    exec(successCallback, errorCallback, "Repro", "setUp", [key]);
+Repro.prototype.setup = function(key, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "setup", [key]);
 };
 
 Repro.prototype.startRecording = function(successCallback, errorCallback) {

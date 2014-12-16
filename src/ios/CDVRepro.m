@@ -11,7 +11,7 @@
 
 @implementation CDVRepro
 
-- (void)setUp:(CDVInvokedUrlCommand*)command
+- (void)setup:(CDVInvokedUrlCommand*)command
 {
     NSString *key = [command.arguments objectAtIndex:0];
     [Repro setup:key];

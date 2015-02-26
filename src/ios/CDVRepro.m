@@ -16,6 +16,22 @@
     [Repro setup:key];
 }
 
+- (void)setLogLevel:(CDVInvokedUrlCommand*)command
+{
+    NSString *logLevel = [command.arguments objectAtIndex:0];
+    if ([logLevel isEqualToString:@"Debug"]) {
+        [Repro setLogLevel:RPRLogLevelDebug];
+    } else if ([logLevel isEqualToString:@"Info"]) {
+        [Repro setLogLevel:RPRLogLevelInfo];
+    } else if ([logLevel isEqualToString:@"Warn"]) {
+        [Repro setLogLevel:RPRLogLevelWarn];
+    } else if ([logLevel isEqualToString:@"Error"]) {
+        [Repro setLogLevel:RPRLogLevelError];
+    } else if ([logLevel isEqualToString:@"None"]) {
+        [Repro setLogLevel:RPRLogLevelNone];
+    }
+}
+
 - (void)startRecording:(CDVInvokedUrlCommand*)command
 {
     [Repro startRecording];
@@ -48,7 +64,17 @@
                                    , height.floatValue) key:password];
 }
 
-- (void)unmaskWithRect:(CDVInvokedUrlCommand*)command
+- (void)maskFullScreen:(CDVInvokedUrlCommand*)command
+{
+    NSString *password = [command.arguments objectAtIndex:0];
+    CGRect winSize = [UIScreen.mainScreen bounds];
+    CGFloat width = winSize.size.width;
+    CGFloat height = winSize.size.height;
+    
+    [Repro maskWithRect:CGRectMake(0, 0, width, height) key:password];
+}
+
+- (void)unmask:(CDVInvokedUrlCommand*)command
 {
     NSString *password = [command.arguments objectAtIndex:0];
     [Repro unmaskForKey:password];

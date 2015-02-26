@@ -6,6 +6,10 @@ Repro.prototype.setup = function(key, successCallback, errorCallback) {
     exec(successCallback, errorCallback, "Repro", "setup", [key]);
 };
 
+Repro.prototype.setLogLevel = function(logLevel, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "setLogLevel", [logLevel]);
+};
+
 Repro.prototype.startRecording = function(successCallback, errorCallback) {
     exec(successCallback, errorCallback, "Repro", "startRecording");
 };
@@ -26,8 +30,12 @@ Repro.prototype.maskWithRect = function(x, y, width, height, password, successCa
     exec(successCallback, errorCallback, "Repro", "maskWithRect", [x, y, width, height, password]);
 };
 
-Repro.prototype.unmaskWithRect = function(password, successCallback, errorCallback) {
-    exec(successCallback, errorCallback, "Repro", "unmaskWithRect", [password]);
+Repro.prototype.maskFullScreen = function(password, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "maskFullScreen", [password]);
+};
+
+Repro.prototype.unmask = function(password, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "unmask", [password]);
 };
 
 Repro.prototype.setUserID = function(userId, successCallback, errorCallback) {

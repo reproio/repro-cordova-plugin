@@ -15,6 +15,9 @@ public:
     // Setup
     static void setup(const char* token);
     
+    // Log Level
+    static void setLogLevel(const char* logLevel);
+    
     // Screen Recording
     static void startRecording();
     static void stopRecording();

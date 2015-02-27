@@ -1,3 +1,7 @@
+### 0.0.6
+
+- Update repro-ios-sdk to 0.4.4
+
 ### 0.0.5
 
 - Update repro-ios-sdk to 0.4.3

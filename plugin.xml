@@ -2,7 +2,7 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     id="io.repro.cordova"
-    version="0.0.7">
+    version="0.0.8">
     <name>Repro</name>
     <description>Repro Cordova Plugin</description>
     <license>Commercial</license>

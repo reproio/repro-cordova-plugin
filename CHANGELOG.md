@@ -1,3 +1,7 @@
+### 0.0.11 (2015/06/20)
+
+- Update repro-ios-sdk to 0.9.8
+
 ### 0.0.10 (2015/05/17)
 
 - Update repro-ios-sdk to 0.9.7

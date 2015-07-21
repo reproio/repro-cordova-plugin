@@ -26,7 +26,6 @@ typedef NS_ENUM(NSInteger, RPRLogLevel) {
 
 // Session (Initialization)
 + (void)setup:(NSString *)token;
-+ (NSString *)token;
 
 // Recording
 + (void)startRecording;
@@ -56,5 +55,9 @@ typedef NS_ENUM(NSInteger, RPRLogLevel) {
 
 // Log
 + (void)setLogLevel:(RPRLogLevel)level;
+
+// Push Notification
++ (void)setPushDeviceToken:(NSData *)pushDeviceToken;
++ (void)setPushDeviceTokenString:(NSString *)pushDeviceToken;
 
 @end

@@ -111,6 +111,12 @@
     [Repro enableUsabilityTesting];
 }
 
+- (void)setPushDeviceToken:(CDVInvokedUrlCommand*)command
+{
+    NSString *deviceToken = [command.arguments objectAtIndex:0];
+    [Repro setPushDeviceTokenString:deviceToken];
+}
+
 static NSDictionary* convertNSStringJSONToNSDictionary(NSString* json) {
     if (json) {
         NSData* data = [json dataUsingEncoding:NSUTF8StringEncoding];

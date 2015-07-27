@@ -50,6 +50,10 @@ Repro.prototype.trackWithProperties = function(eventName, jsonDictionary, succes
     exec(successCallback, errorCallback, "Repro", "trackWithProperties", [eventName, jsonDictionary]);
 };
 
+Repro.prototype.setPushDeviceToken = function(deviceToken, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "setPushDeviceToken", [deviceToken]);
+};
+
 Repro.prototype.survey = function(successCallback, errorCallback) {
     exec(successCallback, errorCallback, "Repro", "survey");
 };

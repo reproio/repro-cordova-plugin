@@ -1,3 +1,7 @@
+### 0.0.14 (2015/07/27)
+
+- Add setPushDeviceToken API
+
 ### 0.0.13 (2015/07/22)
 
 - Update repro-ios-sdk to 0.10.4.1

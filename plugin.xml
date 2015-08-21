@@ -28,7 +28,7 @@
         <framework src="SystemConfiguration.framework" />
         
         <framework src="src/ios/Repro.embeddedframework/Repro.framework" custom="true" />
-        <resource-file src="src/ios/Repro.embeddedframework/Resources/ReproSDKResources.bundle" />
+        <resource-file src="src/ios/Repro.embeddedframework/Repro.framework/ReproSDKResources.bundle" />
     </platform>
 
 </plugin>

@@ -54,6 +54,14 @@ Repro.prototype.setPushDeviceToken = function(deviceToken, successCallback, erro
     exec(successCallback, errorCallback, "Repro", "setPushDeviceToken", [deviceToken]);
 };
 
+Repro.prototype.showInAppMessage = function(successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "showInAppMessage");
+};
+
+Repro.prototype.disableInAppMessageOnActive = function(successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "disableInAppMessageOnActive");
+};
+
 Repro.prototype.survey = function(successCallback, errorCallback) {
     exec(successCallback, errorCallback, "Repro", "survey");
 };

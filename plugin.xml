@@ -2,7 +2,7 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     id="io.repro.cordova"
-    version="0.0.14">
+    version="1.0.0">
     <name>Repro</name>
     <description>Repro Cordova Plugin</description>
     <license>Commercial</license>
@@ -24,13 +24,11 @@
         <source-file src="src/ios/CDVRepro.m" />
         
         <framework src="AVFoundation.framework" />
-        <framework src="CoreGraphics.framework" />
         <framework src="CoreMedia.framework" />
-        <framework src="CoreVideo.framework" />
-        <framework src="Foundation.framework" />
-        <framework src="UIKit.framework" />
+        <framework src="SystemConfiguration.framework" />
         
         <framework src="src/ios/Repro.embeddedframework/Repro.framework" custom="true" />
+        <resource-file src="src/ios/Repro.embeddedframework/Resources/ReproSDKResources.bundle" />
     </platform>
 
 </plugin>

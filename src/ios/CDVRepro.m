@@ -117,6 +117,16 @@
     [Repro setPushDeviceTokenString:deviceToken];
 }
 
+- (void)showInAppMessage:(CDVInvokedUrlCommand*)command
+{
+    [Repro showInAppMessage];
+}
+
+- (void)disableInAppMessageOnActive:(CDVInvokedUrlCommand*)command
+{
+    [Repro disableInAppMessageOnActive];
+}
+
 static NSDictionary* convertNSStringJSONToNSDictionary(NSString* json) {
     if (json) {
         NSData* data = [json dataUsingEncoding:NSUTF8StringEncoding];

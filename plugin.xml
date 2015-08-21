@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-    id="io.repro.cordova"
+    id="cordova-plugin-repro"
     version="1.0.0">
     <name>Repro</name>
     <description>Repro Cordova Plugin</description>

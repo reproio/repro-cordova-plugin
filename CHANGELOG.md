@@ -1,3 +1,11 @@
+### 1.0.2 (2015/08/30)
+
+- Publish plugin to npm
+
+### 1.0.1 (2015/08/22)
+
+- Change plugin id
+
 ### 1.0.0 (2015/08/19)
 
 - Update repro-ios-sdk to 1.0.5

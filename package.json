@@ -1,0 +1,28 @@
+{
+  "name": "cordova-plugin-repro",
+  "version": "1.0.2",
+  "description": "Repro Cordova Plugin",
+  "cordova": {
+    "id": "cordova-plugin-repro",
+    "platforms": [
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reproio/repro-cordova-plugin.git"
+  },
+  "keywords": [
+    "cordova",
+    "repro",
+    "analytics",
+    "ecosystem:cordova",
+    "cordova-ios"
+  ],
+  "author": "Repro",
+  "license": "Commercial",
+  "bugs": {
+    "url": "https://github.com/reproio/repro-cordova-plugin/issues"
+  },
+  "homepage": "https://github.com/reproio/repro-cordova-plugin#readme"
+}

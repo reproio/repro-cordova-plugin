@@ -5,7 +5,7 @@ This plugin provides the ability to use [Repro](https://repro.io/)
 ## Installation
 
 ```
-cordova plugin add io.repro.cordova
+cordova plugin add cordova-plugin-repro
 ```
 
 ### Supported Platforms

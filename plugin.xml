@@ -25,6 +25,7 @@
         
         <framework src="AVFoundation.framework" />
         <framework src="CoreMedia.framework" />
+        <framework src="MobileCoreServices.framework" />
         <framework src="SystemConfiguration.framework" />
         
         <framework src="src/ios/Repro.embeddedframework/Repro.framework" custom="true" />

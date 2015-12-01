@@ -42,6 +42,16 @@ Repro.prototype.setUserID = function(userId, successCallback, errorCallback) {
     exec(successCallback, errorCallback, "Repro", "setUserID", [userId]);
 };
 
+Repro.prototype.setUserProfile = function(key, value, successCallback, errorCallback) {
+    if ((typeof key === "string") && (typeof value === "string")) {
+        exec(successCallback, errorCallback, "Repro", "setUserProfile", [key, value]);
+    } else if ((typeof key === "object") && (!value || (typeof value === "function"))) {
+        exec(value, successCallback, "Repro", "setUserProfile", [JSON.stringify(key)]);
+    } else {
+        return errorCallback("Invalid params");
+    }
+};
+
 Repro.prototype.track = function(eventName, successCallback, errorCallback) {
     exec(successCallback, errorCallback, "Repro", "track", [eventName]);
 };

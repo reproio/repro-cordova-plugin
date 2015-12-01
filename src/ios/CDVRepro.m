@@ -59,9 +59,8 @@
     NSNumber *width = [command.arguments objectAtIndex:2];
     NSNumber *height = [command.arguments objectAtIndex:3];
     NSString *password = [command.arguments objectAtIndex:4];
-    
-    [Repro maskWithRect:CGRectMake(x.floatValue, y.floatValue, width.floatValue
-                                   , height.floatValue) key:password];
+
+    [Repro maskWithRect:CGRectMake(x.floatValue, y.floatValue, width.floatValue, height.floatValue) key:password];
 }
 
 - (void)maskFullScreen:(CDVInvokedUrlCommand*)command
@@ -70,7 +69,7 @@
     CGRect winSize = [UIScreen.mainScreen bounds];
     CGFloat width = winSize.size.width;
     CGFloat height = winSize.size.height;
-    
+
     [Repro maskWithRect:CGRectMake(0, 0, width, height) key:password];
 }
 
@@ -86,6 +85,22 @@
     [Repro setUserID:userId];
 }
 
+- (void)setUserProfile:(CDVInvokedUrlCommand*)command
+{
+    if (command.arguments.count == 1) {
+        id profile = [command.arguments objectAtIndex:0];
+        if ([profile isKindOfClass:[NSString class]]) {
+            [Repro setUserProfile:convertNSStringJSONToNSDictionary(profile)];
+        }
+    } else if (command.arguments.count == 2) {
+        id key = [command.arguments objectAtIndex:0];
+        id value = [command.arguments objectAtIndex:1];
+        if ([key isKindOfClass:[NSString class]] && [value isKindOfClass:[NSString class]]) {
+            [Repro setUserProfile:value forKey:key];
+        }
+    }
+}
+
 - (void)track:(CDVInvokedUrlCommand*)command
 {
     NSString *eventName = [command.arguments objectAtIndex:0];
@@ -96,7 +111,6 @@
 {
     NSString *eventName = [command.arguments objectAtIndex:0];
     NSString *jsonDictinary = [command.arguments objectAtIndex:1];
-    
     [Repro track:eventName properties:convertNSStringJSONToNSDictionary(jsonDictinary)];
 }
 
@@ -105,7 +119,7 @@
     NSError *error = nil;
     [Repro survey:&error];
 }
-    
+
 - (void)enableUsabilityTesting:(CDVInvokedUrlCommand*)command
 {
     [Repro enableUsabilityTesting];

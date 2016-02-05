@@ -54,29 +54,29 @@
 
 - (void)maskWithRect:(CDVInvokedUrlCommand*)command
 {
-    NSNumber *x = [command.arguments objectAtIndex:0];
-    NSNumber *y = [command.arguments objectAtIndex:1];
-    NSNumber *width = [command.arguments objectAtIndex:2];
-    NSNumber *height = [command.arguments objectAtIndex:3];
-    NSString *password = [command.arguments objectAtIndex:4];
+    NSString *key = [command.arguments objectAtIndex:0];
+    NSNumber *x = [command.arguments objectAtIndex:1];
+    NSNumber *y = [command.arguments objectAtIndex:2];
+    NSNumber *width = [command.arguments objectAtIndex:3];
+    NSNumber *height = [command.arguments objectAtIndex:4];
 
-    [Repro maskWithRect:CGRectMake(x.floatValue, y.floatValue, width.floatValue, height.floatValue) key:password];
+    [Repro maskWithRect:CGRectMake(x.floatValue, y.floatValue, width.floatValue, height.floatValue) key:key];
 }
 
 - (void)maskFullScreen:(CDVInvokedUrlCommand*)command
 {
-    NSString *password = [command.arguments objectAtIndex:0];
+    NSString *key = [command.arguments objectAtIndex:0];
     CGRect winSize = [UIScreen.mainScreen bounds];
     CGFloat width = winSize.size.width;
     CGFloat height = winSize.size.height;
 
-    [Repro maskWithRect:CGRectMake(0, 0, width, height) key:password];
+    [Repro maskWithRect:CGRectMake(0, 0, width, height) key:key];
 }
 
 - (void)unmask:(CDVInvokedUrlCommand*)command
 {
-    NSString *password = [command.arguments objectAtIndex:0];
-    [Repro unmaskForKey:password];
+    NSString *key = [command.arguments objectAtIndex:0];
+    [Repro unmaskForKey:key];
 }
 
 - (void)setUserID:(CDVInvokedUrlCommand*)command
@@ -114,12 +114,6 @@
     [Repro track:eventName properties:convertNSStringJSONToNSDictionary(jsonDictinary)];
 }
 
-- (void)survey:(CDVInvokedUrlCommand*)command
-{
-    NSError *error = nil;
-    [Repro survey:&error];
-}
-
 - (void)enableUsabilityTesting:(CDVInvokedUrlCommand*)command
 {
     [Repro enableUsabilityTesting];
@@ -129,6 +123,11 @@
 {
     NSString *deviceToken = [command.arguments objectAtIndex:0];
     [Repro setPushDeviceTokenString:deviceToken];
+}
+
+- (void)enablePushNotification:(CDVInvokedUrlCommand*)command
+{
+    // do nothing
 }
 
 - (void)showInAppMessage:(CDVInvokedUrlCommand*)command

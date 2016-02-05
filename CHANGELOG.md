@@ -1,3 +1,9 @@
+### 2.0.0 (2016/02/05)
+
+- Update repro-ios-sdk to 1.4.22
+- Added Android support with repro-android-sdk 0.13.18
+- Change the argument order of `maskWithRect` API from `maskWithRect(x, y, width, height, key)` to `maskWithRect(key, x, y, width, height)`
+
 ### 1.2.0 (2015/12/02)
 
 - Update repro-ios-sdk to 1.4.0

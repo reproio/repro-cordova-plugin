@@ -1,17 +1,27 @@
 ----------------------------------------------------------------
 
-This product includes 'Apple Reachability' (https://developer.apple.com/library/ios/samplecode/reachability/listings/Reachability_Reachability_h.html), which is released under the following license(s):
-    Apple Reachability <https://developer.apple.com/library/ios/samplecode/reachability/listings/Reachability_Reachability_h.html>
-
-----------------------------------------------------------------
-
 This product includes 'RSSwizzle' (https://github.com/rabovik/RSSwizzle), which is released under the following license(s):
     MIT <http://opensource.org/licenses/mit-license.html>
 
 ----------------------------------------------------------------
 
-This product includes 'KVOController' (https://github.com/facebook/KVOController), which is released under the following license(s):
-    BSD License <http://opensource.org/licenses/BSD-3-Clause>
+This product includes a part of 'Mixpanel iOS SDK' (https://github.com/mixpanel/mixpanel-iphone), which is released under the following license(s):
+    Apatch 2 <http://opensource.org/licenses/Apache-2.0>
+
+----------------------------------------------------------------
+
+This product includes 'AFNetworking' (https://github.com/AFNetworking/AFNetworking), which is released under the following license(s):
+    MIT <http://opensource.org/licenses/mit-license.html>
+
+----------------------------------------------------------------
+
+This product includes 'Grafika' (https://github.com/google/grafika), which is released under the following license(s):
+    Apatch 2 <http://opensource.org/licenses/Apache-2.0>
+
+----------------------------------------------------------------
+
+This product includes a part of 'Mixpanel Android SDK' (https://github.com/mixpanel/mixpanel-android), which is released under the following license(s):
+    Apatch 2 <http://opensource.org/licenses/Apache-2.0>
 
 ----------------------------------------------------------------
 

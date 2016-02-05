@@ -11,6 +11,7 @@ cordova plugin add cordova-plugin-repro
 ### Supported Platforms
 
 - iOS
+- Android
 
 ### Quick Example
 

@@ -1,3 +1,9 @@
+### 2.0.1 (2016/03/01)
+
+- Update repro-ios-sdk to 1.5.1
+- Update repro-android-sdk to 0.14.5
+- Supports Cordova 5.2
+
 ### 2.0.0 (2016/02/05)
 
 - Update repro-ios-sdk to 1.4.22

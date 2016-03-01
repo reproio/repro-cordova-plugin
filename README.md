@@ -23,4 +23,4 @@ onDeviceReady: function() {
 },
 ```
 
-For more detail, see http://doc.repro.io/
+For more detail, see http://docs.repro.io/

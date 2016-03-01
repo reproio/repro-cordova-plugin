@@ -244,7 +244,7 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
 
         callAPI(new API(callbackContext) {
             void api() {
-                Repro.track(name, null);
+                Repro.track(name);
             }
         });
 
@@ -253,7 +253,16 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
 
     private boolean trackWithProperties(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
         final String name = args.getString(0);
-        final JSONObject properties = new JSONObject(args.getString(1));
+
+        final JSONObject propertiesJSON = new JSONObject(args.getString(1));
+        final Map<String, Object> properties = new HashMap<String, Object>() {{
+            final Iterator<String> it = propertiesJSON.keys();
+            while (it.hasNext()) {
+                final String key = it.next();
+                final Object value = propertiesJSON.get(key);
+                put(key, value);
+            }
+        }};
 
         callAPI(new API(callbackContext) {
             void api() {

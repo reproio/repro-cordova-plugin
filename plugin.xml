@@ -2,7 +2,7 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     id="cordova-plugin-repro"
-    version="2.0.0">
+    version="2.0.1">
     <name>Repro</name>
     <description>Repro Cordova Plugin</description>
     <license>Commercial</license>
@@ -38,7 +38,8 @@
 
     <!-- android -->
     <platform name="android">
-        <hook type="after_prepare" src="src/android/update_application_name.js" />
+        <hook type="before_plugin_install" src="src/android/before_plugin_install_hook.js" />
+        <hook type="after_prepare" src="src/android/after_prepare_hook.js" />
 
         <config-file target="config.xml" parent="/*">
             <feature name="Repro">

@@ -114,11 +114,6 @@
     [Repro track:eventName properties:convertNSStringJSONToNSDictionary(jsonDictinary)];
 }
 
-- (void)enableUsabilityTesting:(CDVInvokedUrlCommand*)command
-{
-    [Repro enableUsabilityTesting];
-}
-
 - (void)setPushDeviceToken:(CDVInvokedUrlCommand*)command
 {
     NSString *deviceToken = [command.arguments objectAtIndex:0];

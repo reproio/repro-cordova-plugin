@@ -2,7 +2,7 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     id="cordova-plugin-repro"
-    version="2.0.1">
+    version="2.1.0">
     <name>Repro</name>
     <description>Repro Cordova Plugin</description>
     <license>Commercial</license>
@@ -55,8 +55,8 @@
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <service android:name="io.repro.android.ReproService" />
             <activity
-                android:name="io.repro.android.surveys.SurveyActivity"
-                android:theme="@style/io_repro_android_SurveyActivityTheme"/>
+                android:name="io.repro.android.message.MessageActivity"
+                android:theme="@style/io_repro_android_MessageActivityTheme"/>
         </config-file>
 
         <source-file src="src/android/CordovaPlugin.java" target-dir="src/io/repro/android" />

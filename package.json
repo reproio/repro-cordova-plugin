@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-repro",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Repro Cordova Plugin",
   "cordova": {
     "id": "cordova-plugin-repro",

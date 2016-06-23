@@ -1,27 +1,26 @@
-# repro-cordova-plugin
+# io.repro.cordova
 
-[Repro](https://repro.io) is a mobile analytics tool that lets you have much deeper understanding of mobile app users with play-by-play videos.
+This plugin provides the ability to use [Repro](https://repro.io/)
 
-## Get Started
+## Installation
 
-- [EN](http://docs.repro.io/en/dev/sdk/getstarted/cordova.html)
-- [JA](http://docs.repro.io/ja/dev/sdk/getstarted/cordova.html)
+```
+cordova plugin add cordova-plugin-repro
+```
 
-## Documentation
-
-Read [the documentation](http://docs.repro.io) for further information
-
-## Supported Platforms
+### Supported Platforms
 
 - iOS
 - Android
 
-## Author
+### Quick Example
 
-Repro, Inc.
+```
+onDeviceReady: function() {
+    app.receivedEvent('deviceready');
+    Repro.setup("YOUR_APP_TOKEN");
+    Repro.startRecording();
+},
+```
 
-## License
-
-(c) 2016 Repro Inc.
-
-
+For more detail, see http://docs.repro.io/

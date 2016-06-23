@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-repro",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Repro Cordova Plugin",
   "cordova": {
     "id": "cordova-plugin-repro",
@@ -18,7 +18,8 @@
     "repro",
     "analytics",
     "ecosystem:cordova",
-    "cordova-ios"
+    "cordova-ios",
+    "cordova-android"
   ],
   "dependencies": {
     "xml2js": ">=0.4"

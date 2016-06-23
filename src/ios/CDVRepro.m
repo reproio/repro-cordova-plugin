@@ -135,6 +135,22 @@
     [Repro disableInAppMessageOnActive];
 }
 
+- (void)getUserID:(CDVInvokedUrlCommand*)command
+{
+  NSString* value = [Repro getUserID];
+
+  CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:value];
+  [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)getDeviceID:(CDVInvokedUrlCommand*)command
+{
+  NSString* value = [Repro getDeviceID];
+
+  CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:value];
+  [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
 static NSDictionary* convertNSStringJSONToNSDictionary(NSString* json) {
     if (json) {
         NSData* data = [json dataUsingEncoding:NSUTF8StringEncoding];

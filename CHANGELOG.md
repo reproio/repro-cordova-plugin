@@ -1,3 +1,7 @@
+### 2.3.0 (2016/07/05)
+
+- Update repro-android-sdk to 1.2.0
+
 ### 2.2.0 (2016/06/23)
 
 - Update repro-ios-sdk to 1.7.30

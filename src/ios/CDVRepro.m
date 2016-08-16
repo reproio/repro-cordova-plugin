@@ -85,20 +85,34 @@
     [Repro setUserID:userId];
 }
 
-- (void)setUserProfile:(CDVInvokedUrlCommand*)command
+- (void)setStringUserProfile:(CDVInvokedUrlCommand*)command
 {
-    if (command.arguments.count == 1) {
-        id profile = [command.arguments objectAtIndex:0];
-        if ([profile isKindOfClass:[NSString class]]) {
-            [Repro setUserProfile:convertNSStringJSONToNSDictionary(profile)];
-        }
-    } else if (command.arguments.count == 2) {
-        id key = [command.arguments objectAtIndex:0];
-        id value = [command.arguments objectAtIndex:1];
-        if ([key isKindOfClass:[NSString class]] && [value isKindOfClass:[NSString class]]) {
-            [Repro setUserProfile:value forKey:key];
-        }
-    }
+  NSString* key = [command.arguments objectAtIndex:0];
+  NSString* value = [command.arguments objectAtIndex:1];
+  [Repro setStringUserProfile:value forKey:key];
+}
+
+- (void)setIntUserProfile:(CDVInvokedUrlCommand*)command
+{
+  NSString* key = [command.arguments objectAtIndex:0];
+  NSNumber* value = [command.arguments objectAtIndex:1];
+  [Repro setIntUserProfile:value.intValue forKey:key];
+}
+
+- (void)setDoubleUserProfile:(CDVInvokedUrlCommand*)command
+{
+  NSString* key = [command.arguments objectAtIndex:0];
+  NSNumber* value = [command.arguments objectAtIndex:1];
+  [Repro setDoubleUserProfile:value.doubleValue forKey:key];
+}
+
+- (void)setDateUserProfile:(CDVInvokedUrlCommand*)command
+{
+  NSString* key = [command.arguments objectAtIndex:0];
+  NSNumber* value = [command.arguments objectAtIndex:1];
+
+  NSDate* date = [NSDate dateWithTimeIntervalSince1970:(value.longValue) / 1000.0];
+  [Repro setDateUserProfile:date forKey:key];
 }
 
 - (void)track:(CDVInvokedUrlCommand*)command

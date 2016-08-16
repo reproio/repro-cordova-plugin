@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import android.view.Display;
 import android.view.WindowManager;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -57,8 +58,17 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         else if ("setUserID".equals(action)) {
             return setUserID(args, callbackContext);
         }
-        else if ("setUserProfile".equals(action)) {
-            return setUserProfile(args, callbackContext);
+        else if ("setStringUserProfile".equals(action)) {
+            return setStringUserProfile(args, callbackContext);
+        }
+        else if ("setIntUserProfile".equals(action)) {
+            return setIntUserProfile(args, callbackContext);
+        }
+        else if ("setDoubleUserProfile".equals(action)) {
+            return setDoubleUserProfile(args, callbackContext);
+        }
+        else if ("setDateUserProfile".equals(action)) {
+            return setDateUserProfile(args, callbackContext);
         }
         else if ("track".equals(action)) {
             return track(args, callbackContext);
@@ -225,34 +235,59 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         return true;
     }
 
-    private boolean setUserProfile(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
-        if (!args.isNull(1)) {
-            final String key = args.getString(0);
-            final String value = args.getString(1);
-            callAPI(new API(callbackContext) {
-                Void api() {
-                    Repro.setUserProfile(key, value);
-                    return null;
-                }
-            });
-        }
-        else {
-            final JSONObject profileJSON = new JSONObject(args.getString(0));
-            final Map<String, String> profileMap = new HashMap<String, String>() {{
-                final Iterator<String> it = profileJSON.keys();
-                while (it.hasNext()) {
-                    final String key = it.next();
-                    final Object value = profileJSON.get(key);
-                    put(key, value.toString());
-                }
-            }};
-            callAPI(new API(callbackContext) {
-                Void api() {
-                    Repro.setUserProfile(profileMap);
-                    return null;
-                }
-            });
-        }
+    private boolean setStringUserProfile(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final String key = args.getString(0);
+        final String value = args.getString(1);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.setStringUserProfile(key, value);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean setIntUserProfile(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final String key = args.getString(0);
+        final int value = args.getInt(1);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.setIntUserProfile(key, value);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean setDoubleUserProfile(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final String key = args.getString(0);
+        final double value = args.getDouble(1);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.setDoubleUserProfile(key, value);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean setDateUserProfile(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final String key = args.getString(0);
+        final long value = args.getLong(1);
+        final Date date = new Date(value);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.setDateUserProfile(key, date);
+                return null;
+            }
+        });
 
         return true;
     }

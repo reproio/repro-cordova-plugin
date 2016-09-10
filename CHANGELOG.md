@@ -1,3 +1,7 @@
+### 3.0.1 (2016/09/10)
+
+- Update repro-ios-sdk to [2.0.6](https://github.com/reproio/repro-ios-sdk/releases/tag/2.0.6)
+
 ### 3.0.0 (2016/08/16)
 
 - Update repro-ios-sdk to [2.0.0](https://github.com/reproio/repro-ios-sdk/releases/tag/2.0.0)

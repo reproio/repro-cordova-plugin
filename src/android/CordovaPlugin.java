@@ -78,6 +78,12 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         else if ("setPushDeviceToken".equals(action)) {
             return setPushDeviceToken(args, callbackContext);
         }
+        else if ("getUserID".equals(action)) {
+            return getUserID(args, callbackContext);
+        }
+        else if ("getDeviceID".equals(action)) {
+            return getDeviceID(args, callbackContext);
+        }
 
         return false;
     }
@@ -88,8 +94,9 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         final String token = args.getString(0);
 
         callAPI(new API(callbackContext) {
-            void api() {
+            Void api() {
                 CordovaBridge.startSession(token);
+                return null;
             }
         });
 
@@ -100,7 +107,7 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         final String logLevel = args.getString(0);
 
         callAPI(new API(callbackContext) {
-            void api() {
+            Void api() {
                 if ("Debug".equals(logLevel)) {
                     Repro.setLogLevel(android.util.Log.DEBUG);
                 } else if ("Info".equals(logLevel)) {
@@ -110,6 +117,7 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
                 } else if ("Error".equals(logLevel)) {
                     Repro.setLogLevel(android.util.Log.ERROR);
                 }
+                return null;
             }
         });
 
@@ -118,8 +126,9 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
 
     private boolean startRecording(final CordovaArgs args, final CallbackContext callbackContext) {
         callAPI(new API(callbackContext) {
-            void api() {
+            Void api() {
                 Repro.startRecording();
+                return null;
             }
         });
         return true;
@@ -127,8 +136,9 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
 
     private boolean stopRecording(final CordovaArgs args, final CallbackContext callbackContext) {
         callAPI(new API(callbackContext) {
-            void api() {
+            Void api() {
                 Repro.stopRecording();
+                return null;
             }
         });
         return true;
@@ -136,8 +146,9 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
 
     private boolean pauseRecording(final CordovaArgs args, final CallbackContext callbackContext) {
         callAPI(new API(callbackContext) {
-            void api() {
+            Void api() {
                 Repro.pauseRecording();
+                return null;
             }
         });
         return true;
@@ -145,8 +156,9 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
 
     private boolean resumeRecording(final CordovaArgs args, final CallbackContext callbackContext) {
         callAPI(new API(callbackContext) {
-            void api() {
+            Void api() {
                 Repro.resumeRecording();
+                return null;
             }
         });
         return true;
@@ -160,8 +172,9 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         final int h = args.getInt(4);
 
         callAPI(new API(callbackContext) {
-            void api() {
+            Void api() {
                 Repro.mask(key, new Rect(x, y, w+x, h+y));
+                return null;
             }
         });
 
@@ -177,8 +190,9 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         display.getRealSize(size);
 
         callAPI(new API(callbackContext) {
-            void api() {
+            Void api() {
                 Repro.mask(key, new Rect(0, 0, size.x, size.y));
+                return null;
             }
         });
 
@@ -189,8 +203,9 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         final String key = args.getString(0);
 
         callAPI(new API(callbackContext) {
-            void api() {
+            Void api() {
                 Repro.unmask(key);
+                return null;
             }
         });
 
@@ -201,8 +216,9 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         final String userId = args.getString(0);
 
         callAPI(new API(callbackContext) {
-            void api() {
+            Void api() {
                 Repro.setUserID(userId);
+                return null;
             }
         });
 
@@ -214,8 +230,9 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
             final String key = args.getString(0);
             final String value = args.getString(1);
             callAPI(new API(callbackContext) {
-                void api() {
+                Void api() {
                     Repro.setUserProfile(key, value);
+                    return null;
                 }
             });
         }
@@ -230,8 +247,9 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
                 }
             }};
             callAPI(new API(callbackContext) {
-                void api() {
+                Void api() {
                     Repro.setUserProfile(profileMap);
+                    return null;
                 }
             });
         }
@@ -243,8 +261,9 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         final String name = args.getString(0);
 
         callAPI(new API(callbackContext) {
-            void api() {
+            Void api() {
                 Repro.track(name);
+                return null;
             }
         });
 
@@ -265,8 +284,9 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         }};
 
         callAPI(new API(callbackContext) {
-            void api() {
+            Void api() {
                 Repro.track(name, properties);
+                return null;
             }
         });
 
@@ -275,8 +295,9 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
 
     private boolean showInAppMessage(final CordovaArgs args, final CallbackContext callbackContext) {
         callAPI(new API(callbackContext) {
-            void api() {
+            Void api() {
                 Repro.showInAppMessage(cordova.getActivity());
+                return null;
             }
         });
         return true;
@@ -284,8 +305,9 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
 
     private boolean disableInAppMessageOnActive(final CordovaArgs args, final CallbackContext callbackContext) {
         callAPI(new API(callbackContext) {
-            void api() {
+            Void api() {
                 Repro.disableInAppMessageOnActive();
+                return null;
             }
         });
         return true;
@@ -295,8 +317,9 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         final String senderId = args.getString(0);
 
         callAPI(new API(callbackContext) {
-            void api() {
+            Void api() {
                 Repro.enablePushNotification(senderId);
+                return null;
             }
         });
 
@@ -306,11 +329,31 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
     private boolean setPushDeviceToken(final CordovaArgs args, final CallbackContext callbackContext) {
         // do nothing
         return true;
-    }    
+    }
+
+    private boolean getUserID(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        callAPI(new API(callbackContext) {
+            String api() {
+                return Repro.getUserID();
+            }
+        });
+
+        return true;
+    }
+
+    private boolean getDeviceID(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        callAPI(new API(callbackContext) {
+            String api() {
+                return Repro.getDeviceID();
+            }
+        });
+
+        return true;
+    }
 
     // helper
 
-    private static abstract class API implements Runnable {
+    private static abstract class API<T> implements Runnable {
         private final CallbackContext mCallbackContext;
         API(final CallbackContext callbackContext) {
             super();
@@ -319,11 +362,22 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
 
         @Override
         public void run() {
-            api();
-            mCallbackContext.success();
+            final T ret = api();
+
+            if (ret instanceof Void) {
+              mCallbackContext.success();
+            } else if (ret instanceof String) {
+              mCallbackContext.success((String)ret);
+            } else if (ret instanceof Integer) {
+              mCallbackContext.success((Integer)ret);
+            } else if (ret instanceof JSONObject) {
+              mCallbackContext.success((JSONObject)ret);
+            } else if (ret instanceof JSONArray) {
+              mCallbackContext.success((JSONArray)ret);
+            }
         }
 
-        abstract void api();
+        abstract T api();
     }
 
     private void callAPI(final API api) {

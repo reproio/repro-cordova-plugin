@@ -107,4 +107,12 @@ Repro.prototype.disableInAppMessageOnActive = function(successCallback, errorCal
     exec(successCallback, errorCallback, "Repro", "disableInAppMessageOnActive", []);
 };
 
+Repro.prototype.getUserID = function(successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "getUserID", []);
+};
+
+Repro.prototype.getDeviceID = function(successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "getDeviceID", []);
+};
+
 module.exports = new Repro();

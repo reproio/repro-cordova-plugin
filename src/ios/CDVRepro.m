@@ -5,10 +5,8 @@
 //  Copyright (c) 2014 Repro Inc. All rights reserved.
 //
 
-#import "Repro/Repro.h"
-
 #import "CDVRepro.h"
-#import "CDVReproEventPropertiesFactory.h"
+#import "Repro/Repro.h"
 
 @implementation CDVRepro
 
@@ -87,34 +85,20 @@
     [Repro setUserID:userId];
 }
 
-- (void)setStringUserProfile:(CDVInvokedUrlCommand*)command
+- (void)setUserProfile:(CDVInvokedUrlCommand*)command
 {
-  NSString* key = [command.arguments objectAtIndex:0];
-  NSString* value = [command.arguments objectAtIndex:1];
-  [Repro setStringUserProfile:value forKey:key];
-}
-
-- (void)setIntUserProfile:(CDVInvokedUrlCommand*)command
-{
-  NSString* key = [command.arguments objectAtIndex:0];
-  NSNumber* value = [command.arguments objectAtIndex:1];
-  [Repro setIntUserProfile:value.intValue forKey:key];
-}
-
-- (void)setDoubleUserProfile:(CDVInvokedUrlCommand*)command
-{
-  NSString* key = [command.arguments objectAtIndex:0];
-  NSNumber* value = [command.arguments objectAtIndex:1];
-  [Repro setDoubleUserProfile:value.doubleValue forKey:key];
-}
-
-- (void)setDateUserProfile:(CDVInvokedUrlCommand*)command
-{
-  NSString* key = [command.arguments objectAtIndex:0];
-  NSNumber* value = [command.arguments objectAtIndex:1];
-
-  NSDate* date = [NSDate dateWithTimeIntervalSince1970:(value.longValue) / 1000.0];
-  [Repro setDateUserProfile:date forKey:key];
+    if (command.arguments.count == 1) {
+        id profile = [command.arguments objectAtIndex:0];
+        if ([profile isKindOfClass:[NSString class]]) {
+            [Repro setUserProfile:convertNSStringJSONToNSDictionary(profile)];
+        }
+    } else if (command.arguments.count == 2) {
+        id key = [command.arguments objectAtIndex:0];
+        id value = [command.arguments objectAtIndex:1];
+        if ([key isKindOfClass:[NSString class]] && [value isKindOfClass:[NSString class]]) {
+            [Repro setUserProfile:value forKey:key];
+        }
+    }
 }
 
 - (void)track:(CDVInvokedUrlCommand*)command
@@ -126,166 +110,8 @@
 - (void)trackWithProperties:(CDVInvokedUrlCommand*)command
 {
     NSString *eventName = [command.arguments objectAtIndex:0];
-    id properties = [command.arguments objectAtIndex:1];
-
-    if (properties == nil || properties == NSNull.null) {
-        [Repro track:eventName properties:nil];
-    } else if ([properties isKindOfClass:NSDictionary.class]) {
-        [Repro track:eventName properties:properties];
-    } else if ([properties isKindOfClass:NSString.class]) {
-        NSLog(@"WARN: Repro trackWithProperties(String, String) will be deprecated. Use trackWithProperties(String, JSON) instead.");
-        [Repro track:eventName properties:convertNSStringJSONToNSDictionary(properties)];
-    } else {
-        NSLog(@"ERROR: Repro Didn't track custom event \"%@\": Invalid second argument for trackWithProperties. %@ is not allowed.", eventName, [properties class]);
-    }
-}
-
-- (void)trackViewContent:(CDVInvokedUrlCommand*)command
-{
-    id contentId = [command.arguments objectAtIndex:0];
-    if (![contentId isKindOfClass:NSString.class]) {
-        NSLog(@"ERROR: Repro Didn't track standard event \"view_content\": ContentID is required, and should be String. null or undefined is not allowed.");
-        return;
-    }
-
-    NSError *error;
-    id props = [command.arguments objectAtIndex:1];
-    RPRViewContentProperties *propsObj = [CDVReproEventPropertiesFactory convertToViewContentProperties:props error:&error];
-    if (error) {
-        NSLog(@"ERROR: Repro Didn't track standard event \"view_content\": %@", error.userInfo[@"cause"]);
-        return;
-    }
-
-    [Repro trackViewContent:contentId properties:propsObj];
-}
-
-- (void)trackSearch:(CDVInvokedUrlCommand*)command
-{
-    NSError *error;
-    id props = [command.arguments objectAtIndex:0];
-    RPRSearchProperties *propsObj = [CDVReproEventPropertiesFactory convertToSearchProperties:props error:&error];
-    if (error) {
-        NSLog(@"ERROR: Repro Didn't track standard event \"search\": %@", error.userInfo[@"cause"]);
-        return;
-    }
-
-    [Repro trackSearch:propsObj];
-}
-
-- (void)trackAddToCart:(CDVInvokedUrlCommand*)command
-{
-    id contentId = [command.arguments objectAtIndex:0];
-    if (![contentId isKindOfClass:NSString.class]) {
-        NSLog(@"ERROR: Repro Didn't track standard event \"add_to_cart\": ContentID is required, and should be String. null or undefined is not allowed.");
-        return;
-    }
-
-    NSError *error;
-    id props = [command.arguments objectAtIndex:1];
-    RPRAddToCartProperties *propsObj = [CDVReproEventPropertiesFactory convertToAddToCartProperties:props error:&error];
-    if (error) {
-        NSLog(@"ERROR: Repro Didn't track standard event \"add_to_cart\": %@", error.userInfo[@"cause"]);
-        return;
-    }
-
-    [Repro trackAddToCart:contentId properties:propsObj];
-}
-
-- (void)trackAddToWishlist:(CDVInvokedUrlCommand*)command
-{
-    NSError *error;
-    id props = [command.arguments objectAtIndex:0];
-    RPRAddToWishlistProperties *propsObj = [CDVReproEventPropertiesFactory convertToAddToWishlistProperties:props error:&error];
-    if (error) {
-        NSLog(@"ERROR: Repro Didn't track standard event \"add_to_wishlist\": %@", error.userInfo[@"cause"]);
-        return;
-    }
-
-    [Repro trackAddToWishlist:propsObj];
-}
-
-- (void)trackInitiateCheckout:(CDVInvokedUrlCommand*)command
-{
-    NSError *error;
-    id props = [command.arguments objectAtIndex:0];
-    RPRInitiateCheckoutProperties *propsObj = [CDVReproEventPropertiesFactory convertToInitiateCheckoutProperties:props error:&error];
-    if (error) {
-        NSLog(@"ERROR: Repro Didn't track standard event \"initiate_checkout\": %@", error.userInfo[@"cause"]);
-        return;
-    }
-
-    [Repro trackInitiateCheckout:propsObj];
-}
-
-- (void)trackAddPaymentInfo:(CDVInvokedUrlCommand*)command
-{
-    NSError *error;
-    id props = [command.arguments objectAtIndex:0];
-    RPRAddPaymentInfoProperties *propsObj = [CDVReproEventPropertiesFactory convertToAddPaymentInfoProperties:props error:&error];
-    if (error) {
-        NSLog(@"ERROR: Repro Didn't track standard event \"add_payment_info\": %@", error.userInfo[@"cause"]);
-        return;
-    }
-
-    [Repro trackAddPaymentInfo:propsObj];
-}
-
-- (void)trackPurchase:(CDVInvokedUrlCommand*)command
-{
-    id contentId = [command.arguments objectAtIndex:0];
-    if (![contentId isKindOfClass:NSString.class]) {
-        NSLog(@"ERROR: Repro Didn't track standard event \"purchase\": ContentID is required, and should be String. null or undefined is not allowed.");
-        return;
-    }
-
-    NSError *error;
-    id props = [command.arguments objectAtIndex:1];
-    RPRPurchaseProperties *propsObj = [CDVReproEventPropertiesFactory convertToPurchaseProperties:props error:&error];
-    if (error) {
-        NSLog(@"ERROR: Repro Didn't track standard event \"purchase\": %@", error.userInfo[@"cause"]);
-        return;
-    }
-
-    [Repro trackPurchase:contentId properties:propsObj];
-}
-
-- (void)trackShare:(CDVInvokedUrlCommand*)command
-{
-    NSError *error;
-    id props = [command.arguments objectAtIndex:0];
-    RPRShareProperties *propsObj = [CDVReproEventPropertiesFactory convertToShareProperties:props error:&error];
-    if (error) {
-        NSLog(@"ERROR: Repro Didn't track standard event \"share\": %@", error.userInfo[@"cause"]);
-        return;
-    }
-
-    [Repro trackShare:propsObj];
-}
-
-- (void)trackLead:(CDVInvokedUrlCommand*)command
-{
-    NSError *error;
-    id props = [command.arguments objectAtIndex:0];
-    RPRLeadProperties *propsObj = [CDVReproEventPropertiesFactory convertToLeadProperties:props error:&error];
-    if (error) {
-        NSLog(@"ERROR: Repro Didn't track standard event \"lead\": %@", error.userInfo[@"cause"]);
-        return;
-    }
-
-    [Repro trackLead:propsObj];
-}
-
-- (void)trackCompleteRegistration:(CDVInvokedUrlCommand*)command
-{
-    NSError *error;
-    id props = [command.arguments objectAtIndex:0];
-    RPRCompleteRegistrationProperties *propsObj = [CDVReproEventPropertiesFactory convertToCompleteRegistrationProperties:props error:&error];
-    if (error) {
-        NSLog(@"ERROR: Repro Didn't track standard event \"complete_registration\": %@", error.userInfo[@"cause"]);
-        return;
-    }
-
-    [Repro trackCompleteRegistration:propsObj];
+    NSString *jsonDictinary = [command.arguments objectAtIndex:1];
+    [Repro track:eventName properties:convertNSStringJSONToNSDictionary(jsonDictinary)];
 }
 
 - (void)setPushDeviceToken:(CDVInvokedUrlCommand*)command
@@ -307,27 +133,6 @@
 - (void)disableInAppMessageOnActive:(CDVInvokedUrlCommand*)command
 {
     [Repro disableInAppMessageOnActive];
-}
-
-- (void)getUserID:(CDVInvokedUrlCommand*)command
-{
-  NSString* value = [Repro getUserID];
-
-  CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:value];
-  [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-}
-
-- (void)getDeviceID:(CDVInvokedUrlCommand*)command
-{
-  NSString* value = [Repro getDeviceID];
-
-  CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:value];
-  [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-}
-
-- (void)trackNotificationOpened:(CDVInvokedUrlCommand*)command
-{
-    // do nothing
 }
 
 static NSDictionary* convertNSStringJSONToNSDictionary(NSString* json) {

@@ -2,7 +2,7 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     id="cordova-plugin-repro"
-    version="3.6.1">
+    version="2.0.2">
     <name>Repro</name>
     <description>Repro Cordova Plugin</description>
     <license>Commercial</license>
@@ -22,8 +22,6 @@
 
         <header-file src="src/ios/CDVRepro.h" />
         <source-file src="src/ios/CDVRepro.m" />
-        <header-file src="src/ios/CDVReproEventPropertiesFactory.h" />
-        <source-file src="src/ios/CDVReproEventPropertiesFactory.m" />
 
         <framework src="AVFoundation.framework" />
         <framework src="CoreMedia.framework" />
@@ -45,7 +43,7 @@
 
         <config-file target="config.xml" parent="/*">
             <feature name="Repro">
-                <param name="android-package" value="io.repro.cordova.CordovaPlugin"/>
+                <param name="android-package" value="io.repro.android.CordovaPlugin"/>
             </feature>
         </config-file>
 
@@ -56,13 +54,15 @@
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <service android:name="io.repro.android.ReproService" />
+            <activity
+                android:name="io.repro.android.surveys.SurveyActivity"
+                android:theme="@style/io_repro_android_SurveyActivityTheme"/>
         </config-file>
 
-        <source-file src="src/android/CordovaPlugin.java" target-dir="src/io/repro/cordova" />
-        <source-file src="src/android/StandardEventPropertiesFactory.java" target-dir="src/io/repro/cordova" />
+        <source-file src="src/android/CordovaPlugin.java" target-dir="src/io/repro/android" />
         <resource-file src="src/android/repro-android-sdk.aar" target="libs/repro-android-sdk.aar" />
 
-        <framework src="com.google.android.gms:play-services-gcm:7.0.0" />
+        <framework src="com.google.android.gms:play-services-gcm:+" />
         <framework src="src/android/repro-android-sdk.gradle" custom="true" type="gradleReference" />
 
     </platform>

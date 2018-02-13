@@ -73,14 +73,20 @@ Repro.prototype.setUserID = function(userId, successCallback, errorCallback) {
     exec(successCallback, errorCallback, "Repro", "setUserID", [userId]);
 };
 
-Repro.prototype.setUserProfile = function(key, value, successCallback, errorCallback) {
-    if ((typeof key === "string") && (typeof value === "string")) {
-        exec(successCallback, errorCallback, "Repro", "setUserProfile", [key, value]);
-    } else if ((typeof key === "object") && (!value || (typeof value === "function"))) {
-        exec(value, successCallback, "Repro", "setUserProfile", [JSON.stringify(key)]);
-    } else {
-        return errorCallback("Invalid params");
-    }
+Repro.prototype.setStringUserProfile = function(key, value, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "setStringUserProfile", [key, value]);
+};
+
+Repro.prototype.setIntUserProfile = function(key, value, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "setIntUserProfile", [key, value]);
+};
+
+Repro.prototype.setDoubleUserProfile = function(key, value, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "setDoubleUserProfile", [key, value]);
+};
+
+Repro.prototype.setDateUserProfile = function(key, value, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "setDateUserProfile", [key, value.getTime()]);
 };
 
 Repro.prototype.track = function(eventName, successCallback, errorCallback) {

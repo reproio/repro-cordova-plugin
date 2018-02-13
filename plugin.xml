@@ -2,7 +2,7 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     id="cordova-plugin-repro"
-    version="3.1.3">
+    version="3.6.2">
     <name>Repro</name>
     <description>Repro Cordova Plugin</description>
     <license>Commercial</license>
@@ -22,6 +22,8 @@
 
         <header-file src="src/ios/CDVRepro.h" />
         <source-file src="src/ios/CDVRepro.m" />
+        <header-file src="src/ios/CDVReproEventPropertiesFactory.h" />
+        <source-file src="src/ios/CDVReproEventPropertiesFactory.m" />
 
         <framework src="AVFoundation.framework" />
         <framework src="CoreMedia.framework" />
@@ -43,7 +45,7 @@
 
         <config-file target="config.xml" parent="/*">
             <feature name="Repro">
-                <param name="android-package" value="io.repro.android.CordovaPlugin"/>
+                <param name="android-package" value="io.repro.cordova.CordovaPlugin"/>
             </feature>
         </config-file>
 
@@ -56,7 +58,8 @@
             <service android:name="io.repro.android.ReproService" />
         </config-file>
 
-        <source-file src="src/android/CordovaPlugin.java" target-dir="src/io/repro/android" />
+        <source-file src="src/android/CordovaPlugin.java" target-dir="src/io/repro/cordova" />
+        <source-file src="src/android/StandardEventPropertiesFactory.java" target-dir="src/io/repro/cordova" />
         <resource-file src="src/android/repro-android-sdk.aar" target="libs/repro-android-sdk.aar" />
 
         <framework src="com.google.android.gms:play-services-gcm:7.0.0" />

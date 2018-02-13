@@ -1,4 +1,4 @@
-package io.repro.android;
+package io.repro.cordova;
 
 import android.content.Context;
 import android.graphics.Point;
@@ -17,6 +17,9 @@ import org.apache.cordova.CordovaArgs;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import io.repro.android.Repro;
+import io.repro.android.CordovaBridge;
 
 /**
  * Created by nekoe on 1/15/16.
@@ -76,6 +79,36 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         else if ("trackWithProperties".equals(action)) {
             return trackWithProperties(args, callbackContext);
         }
+        else if ("trackViewContent".equals(action)) {
+            return trackViewContent(args, callbackContext);
+        }
+        else if ("trackSearch".equals(action)) {
+            return trackSearch(args, callbackContext);
+        }
+        else if ("trackAddToCart".equals(action)) {
+            return trackAddToCart(args, callbackContext);
+        }
+        else if ("trackAddToWishlist".equals(action)) {
+            return trackAddToWishlist(args, callbackContext);
+        }
+        else if ("trackInitiateCheckout".equals(action)) {
+            return trackInitiateCheckout(args, callbackContext);
+        }
+        else if ("trackAddPaymentInfo".equals(action)) {
+            return trackAddPaymentInfo(args, callbackContext);
+        }
+        else if ("trackPurchase".equals(action)) {
+            return trackPurchase(args, callbackContext);
+        }
+        else if ("trackShare".equals(action)) {
+            return trackShare(args, callbackContext);
+        }
+        else if ("trackLead".equals(action)) {
+            return trackLead(args, callbackContext);
+        }
+        else if ("trackCompleteRegistration".equals(action)) {
+            return trackCompleteRegistration(args, callbackContext);
+        }
         else if ("showInAppMessage".equals(action)) {
             return showInAppMessage(args, callbackContext);
         }
@@ -93,6 +126,9 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         }
         else if ("getDeviceID".equals(action)) {
             return getDeviceID(args, callbackContext);
+        }
+        else if ("trackNotificationOpened".equals(action)) {
+            return trackNotificationOpened(args, callbackContext);
         }
 
         return false;
@@ -307,20 +343,230 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
 
     private boolean trackWithProperties(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
         final String name = args.getString(0);
-
-        final JSONObject propertiesJSON = new JSONObject(args.getString(1));
-        final Map<String, Object> properties = new HashMap<String, Object>() {{
-            final Iterator<String> it = propertiesJSON.keys();
-            while (it.hasNext()) {
-                final String key = it.next();
-                final Object value = propertiesJSON.get(key);
-                put(key, value);
-            }
-        }};
+        final Object properties = args.opt(1);
 
         callAPI(new API(callbackContext) {
             Void api() {
-                Repro.track(name, properties);
+                try {
+                    callTrackAPI(name, properties);
+                } catch (JSONException e) {
+                    android.util.Log.e("Repro", "Didn't track custom event \"" + name + "\": Invalid second argument for trackWithProperties.", e);
+                }
+                return null;
+            }
+
+            private void callTrackAPI(final String name, final Object properties) throws JSONException {
+                if (properties == null || properties == JSONObject.NULL) {
+                    Repro.track(name);
+                } else if (properties instanceof JSONObject) {
+                    Repro.track(name, jsonToMap((JSONObject)properties));
+                } else if (properties instanceof String) {
+                    android.util.Log.w("Repro", "trackWithProperties(String, String) will be deprecated. Use trackWithProperties(String, JSON) instead.");
+                    Repro.track(name, jsonToMap(new JSONObject((String)properties)));
+                } else {
+                    android.util.Log.e("Repro", "Didn't track custom event \"" + name + "\": Invalid second argument for trackWithProperties. " + properties.getClass().getName() + " is not allowed.");
+                }
+            }
+
+            private Map<String, Object> jsonToMap(final JSONObject json) throws JSONException {
+              return new HashMap<String, Object>() {{
+                  final Iterator<String> it = json.keys();
+                  while (it.hasNext()) {
+                      final String key = it.next();
+                      final Object value = json.get(key);
+                      put(key, value);
+                  }
+              }};
+            }
+        });
+
+        return true;
+    }
+
+    private boolean trackViewContent(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final Object arg0 = args.opt(0);
+        final Object arg1 = args.opt(1);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                if (!(arg0 instanceof String)) {
+                    android.util.Log.e("Repro", "Didn't track standard event \"view_content\": ContentID is required, and should be String. null or undefined is not allowed.");
+                    return null;
+                }
+                final String contentId = (String)arg0;
+
+                try {
+                    Repro.trackViewContent(contentId, StandardEventPropertiesFactory.convertToViewContentProperties(arg1));
+                } catch (Exception e) {
+                    android.util.Log.e("Repro", "Didn't track standard event \"view_content\": " + e.getMessage());
+                }
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean trackSearch(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final Object arg0 = args.opt(0);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                try {
+                    Repro.trackSearch(StandardEventPropertiesFactory.convertToSearchProperties(arg0));
+                } catch (Exception e) {
+                    android.util.Log.e("Repro", "Didn't track standard event \"search\": " + e.getMessage());
+                }
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean trackAddToCart(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final Object arg0 = args.opt(0);
+        final Object arg1 = args.opt(1);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                if (!(arg0 instanceof String)) {
+                    android.util.Log.e("Repro", "Didn't track standard event \"add_to_cart\": ContentID is required, and should be String. null or undefined is not allowed.");
+                    return null;
+                }
+                final String contentId = (String)arg0;
+
+                try {
+                    Repro.trackAddToCart(contentId, StandardEventPropertiesFactory.convertToAddToCartProperties(arg1));
+                } catch (Exception e) {
+                    android.util.Log.e("Repro", "Didn't track standard event \"add_to_cart\": " + e.getMessage());
+                }
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean trackAddToWishlist(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final Object arg0 = args.opt(0);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                try {
+                    Repro.trackAddToWishlist(StandardEventPropertiesFactory.convertToAddToWishlistProperties(arg0));
+                } catch (Exception e) {
+                    android.util.Log.e("Repro", "Didn't track standard event \"add_to_wishlist\": " + e.getMessage());
+                }
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean trackInitiateCheckout(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final Object arg0 = args.opt(0);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                try {
+                    Repro.trackInitiateCheckout(StandardEventPropertiesFactory.convertToInitiateCheckoutProperties(arg0));
+                } catch (Exception e) {
+                    android.util.Log.e("Repro", "Didn't track standard event \"initiate_checkout\": " + e.getMessage());
+                }
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean trackAddPaymentInfo(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final Object arg0 = args.opt(0);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                try {
+                    Repro.trackAddPaymentInfo(StandardEventPropertiesFactory.convertToAddPaymentInfoProperties(arg0));
+                } catch (Exception e) {
+                    android.util.Log.e("Repro", "Didn't track standard event \"add_payment_info\": " + e.getMessage());
+                }
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean trackPurchase(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final Object arg0 = args.opt(0);
+        final Object arg1 = args.opt(1);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                if (!(arg0 instanceof String)) {
+                    android.util.Log.e("Repro", "Didn't track standard event \"purchase\": ContentID is required, and should be String. null or undefined is not allowed.");
+                    return null;
+                }
+                final String contentId = (String)arg0;
+
+                try {
+                    Repro.trackPurchase(contentId, StandardEventPropertiesFactory.convertToPurchaseProperties(arg1));
+                } catch (Exception e) {
+                    android.util.Log.e("Repro", "Didn't track standard event \"purchase\": " + e.getMessage());
+                }
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean trackShare(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final Object arg0 = args.opt(0);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                try {
+                    Repro.trackShare(StandardEventPropertiesFactory.convertToShareProperties(arg0));
+                } catch (Exception e) {
+                    android.util.Log.e("Repro", "Didn't track standard event \"share\": " + e.getMessage());
+                }
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean trackLead(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final Object arg0 = args.opt(0);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                try {
+                    Repro.trackLead(StandardEventPropertiesFactory.convertToLeadProperties(arg0));
+                } catch (Exception e) {
+                    android.util.Log.e("Repro", "Didn't track standard event \"lead\": " + e.getMessage());
+                }
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean trackCompleteRegistration(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final Object arg0 = args.opt(0);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                try {
+                    Repro.trackCompleteRegistration(StandardEventPropertiesFactory.convertToCompleteRegistrationProperties(arg0));
+                } catch (Exception e) {
+                    android.util.Log.e("Repro", "Didn't track standard event \"complete_registration\": " + e.getMessage());
+                }
                 return null;
             }
         });
@@ -380,6 +626,19 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         callAPI(new API(callbackContext) {
             String api() {
                 return Repro.getDeviceID();
+            }
+        });
+
+        return true;
+    }
+
+    private boolean trackNotificationOpened(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final String notificationId = args.getString(0);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.trackNotificationOpened(notificationId);
+                return null;
             }
         });
 

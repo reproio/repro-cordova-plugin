@@ -49,7 +49,7 @@ typedef NS_ENUM(NSInteger, RPRLogLevel) {
 + (void)trackAddToWishlist:(RPRAddToWishlistProperties *)properties;
 + (void)trackInitiateCheckout:(RPRInitiateCheckoutProperties *)properties;
 + (void)trackAddPaymentInfo:(RPRAddPaymentInfoProperties *)properties;
-+ (void)trackPurchase:(NSString *)contentID properties:(RPRPurchaseProperties *)properties;
++ (void)trackPurchase:(NSString *)contentID value:(double)value currency:(NSString*)currency properties:(RPRPurchaseProperties *)properties;
 + (void)trackShare:(RPRShareProperties *)properties;
 + (void)trackCompleteRegistration:(RPRCompleteRegistrationProperties *)properties;
 + (void)trackLead:(RPRLeadProperties *)properties;
@@ -60,6 +60,8 @@ typedef NS_ENUM(NSInteger, RPRLogLevel) {
 + (void)stopRecording;
 + (void)pauseRecording;
 + (void)resumeRecording;
++ (void)enableRecordingWhileViewAnimations;
++ (void)disableRecordingWhileViewAnimations;
 
 // Masking
 + (void)mask:(UIView *)view;

@@ -211,8 +211,6 @@ static void setError(NSError **error, NSString* cause) {
     CDVReproDictionaryWrapper *propsDict = [[CDVReproDictionaryWrapper alloc] initWith:props error:error];
     RPRPurchaseProperties *propsObj = [[RPRPurchaseProperties alloc] init];
 
-    if ([propsDict has:@"value"])            propsObj.value           = [propsDict getDouble:@"value" error:error];
-    if ([propsDict has:@"currency"])         propsObj.currency        = [propsDict getString:@"currency" error:error];
     if ([propsDict has:@"content_name"])     propsObj.contentName     = [propsDict getString:@"content_name" error:error];
     if ([propsDict has:@"content_category"]) propsObj.contentCategory = [propsDict getString:@"content_category" error:error];
     if ([propsDict has:@"num_items"])        propsObj.numItems        = [propsDict getInt:@"num_items" error:error];

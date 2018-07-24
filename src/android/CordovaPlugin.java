@@ -502,6 +502,8 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
     private boolean trackPurchase(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
         final Object arg0 = args.opt(0);
         final Object arg1 = args.opt(1);
+        final Object arg2 = args.opt(2);
+        final Object arg3 = args.opt(3);
 
         callAPI(new API(callbackContext) {
             Void api() {
@@ -511,8 +513,20 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
                 }
                 final String contentId = (String)arg0;
 
+                if (!(arg1 instanceof Number)) {
+                    android.util.Log.e("Repro", "Didn't track standard event \"purchase\": value is required, and should be number. null or undefined is not allowed.");
+                    return null;
+                }
+                final double value = ((Number)arg1).doubleValue();
+
+                if (!(arg2 instanceof String)) {
+                    android.util.Log.e("Repro", "Didn't track standard event \"purchase\": currency is required, and should be String. null or undefined is not allowed.");
+                    return null;
+                }
+                final String currency = (String)arg2;
+
                 try {
-                    Repro.trackPurchase(contentId, StandardEventPropertiesFactory.convertToPurchaseProperties(arg1));
+                    Repro.trackPurchase(contentId, value, currency, StandardEventPropertiesFactory.convertToPurchaseProperties(arg3));
                 } catch (Exception e) {
                     android.util.Log.e("Repro", "Didn't track standard event \"purchase\": " + e.getMessage());
                 }

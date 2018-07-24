@@ -109,8 +109,6 @@ public final class StandardEventPropertiesFactory {
         final JSONObjectWrapper propsJSON = new JSONObjectWrapper(props);
         final PurchaseProperties propsObj = new PurchaseProperties();
 
-        if (propsJSON.has("value"))            propsObj.setValue(propsJSON.getDouble("value"));
-        if (propsJSON.has("currency"))         propsObj.setCurrency(propsJSON.getString("currency"));
         if (propsJSON.has("content_name"))     propsObj.setContentName(propsJSON.getString("content_name"));
         if (propsJSON.has("content_category")) propsObj.setContentCategory(propsJSON.getString("content_category"));
         if (propsJSON.has("num_items"))        propsObj.setNumItems(propsJSON.getInt("num_items"));

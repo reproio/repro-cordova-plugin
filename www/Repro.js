@@ -121,8 +121,8 @@ Repro.prototype.trackAddPaymentInfo = function(properties, successCallback, erro
     exec(successCallback, errorCallback, "Repro", "trackAddPaymentInfo", [properties]);
 };
 
-Repro.prototype.trackPurchase = function(contentID, properties, successCallback, errorCallback) {
-    exec(successCallback, errorCallback, "Repro", "trackPurchase", [contentID, properties]);
+Repro.prototype.trackPurchase = function(contentID, value, currency, properties, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "trackPurchase", [contentID, value, currency, properties]);
 };
 
 Repro.prototype.trackShare = function(properties, successCallback, errorCallback) {

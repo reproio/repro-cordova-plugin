@@ -232,21 +232,36 @@
 
 - (void)trackPurchase:(CDVInvokedUrlCommand*)command
 {
-    id contentId = [command.arguments objectAtIndex:0];
-    if (![contentId isKindOfClass:NSString.class]) {
+    id arg0 = [command.arguments objectAtIndex:0];
+    if (![arg0 isKindOfClass:NSString.class]) {
         NSLog(@"ERROR: Repro Didn't track standard event \"purchase\": ContentID is required, and should be String. null or undefined is not allowed.");
         return;
     }
+    NSString *contentId = (NSString*)arg0;
+
+    id arg1 = [command.arguments objectAtIndex:1];
+    if (![arg1 isKindOfClass:NSNumber.class]) {
+        NSLog(@"ERROR: Repro Didn't track standard event \"purchase\": value is required, and should be number. null or undefined is not allowed.");
+        return;
+    }
+    double value = [((NSNumber*)arg1) doubleValue];
+
+    id arg2 = [command.arguments objectAtIndex:2];
+    if (![arg2 isKindOfClass:NSString.class]) {
+        NSLog(@"ERROR: Repro Didn't track standard event \"purchase\": currency is required, and should be String. null or undefined is not allowed.");
+        return;
+    }
+    NSString* currency = (NSString*)arg2;
 
     NSError *error;
-    id props = [command.arguments objectAtIndex:1];
+    id props = [command.arguments objectAtIndex:3];
     RPRPurchaseProperties *propsObj = [CDVReproEventPropertiesFactory convertToPurchaseProperties:props error:&error];
     if (error) {
         NSLog(@"ERROR: Repro Didn't track standard event \"purchase\": %@", error.userInfo[@"cause"]);
         return;
     }
 
-    [Repro trackPurchase:contentId properties:propsObj];
+    [Repro trackPurchase:contentId value:value currency:currency properties:propsObj];
 }
 
 - (void)trackShare:(CDVInvokedUrlCommand*)command

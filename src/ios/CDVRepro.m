@@ -5,6 +5,8 @@
 //  Copyright (c) 2014 Repro Inc. All rights reserved.
 //
 
+#import <UserNotifications/UserNotifications.h>
+
 #import "Repro/Repro.h"
 
 #import "CDVRepro.h"
@@ -303,15 +305,24 @@
     [Repro trackCompleteRegistration:propsObj];
 }
 
-- (void)setPushDeviceToken:(CDVInvokedUrlCommand*)command
-{
-    NSString *deviceToken = [command.arguments objectAtIndex:0];
-    [Repro setPushDeviceTokenString:deviceToken];
-}
-
 - (void)enablePushNotification:(CDVInvokedUrlCommand*)command
 {
     // do nothing
+}
+
+- (void)enablePushNotificationForIOS:(CDVInvokedUrlCommand*)command
+{
+    if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_9_x_Max) {
+        UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+        [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert | UNAuthorizationOptionBadge | UNAuthorizationOptionSound) completionHandler:^(BOOL granted, NSError * _Nullable error) {
+        }];
+        [[UIApplication sharedApplication] registerForRemoteNotifications];
+    } else {
+        UIUserNotificationType types = UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert;
+        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
+        [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+        [[UIApplication sharedApplication] registerForRemoteNotifications];
+    }
 }
 
 - (void)showInAppMessage:(CDVInvokedUrlCommand*)command

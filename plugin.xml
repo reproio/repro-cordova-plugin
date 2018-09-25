@@ -2,7 +2,7 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     id="cordova-plugin-repro"
-    version="4.0.0">
+    version="4.1.0">
     <name>Repro</name>
     <description>Repro Cordova Plugin</description>
     <license>Commercial</license>
@@ -14,6 +14,9 @@
 
     <!-- ios -->
     <platform name="ios">
+        <preference name="ENABLE_IOS_PUSH" default="true" />
+        <hook type="after_prepare" src="src/ios/after_prepare_hook.js" />
+
         <config-file target="config.xml" parent="/*">
             <feature name="Repro">
                 <param name="ios-package" value="CDVRepro"/>
@@ -24,6 +27,9 @@
         <source-file src="src/ios/CDVRepro.m" />
         <header-file src="src/ios/CDVReproEventPropertiesFactory.h" />
         <source-file src="src/ios/CDVReproEventPropertiesFactory.m" />
+        <header-file src="src/ios/AppDelegate+CDVReproNotification.h" />
+        <source-file src="src/ios/AppDelegate+CDVReproNotification.m" />
+        <header-file src="src/ios/CDVReproEnableSwizzling.h" />
 
         <framework src="AVFoundation.framework" />
         <framework src="CoreMedia.framework" />
@@ -41,6 +47,7 @@
 
     <!-- android -->
     <platform name="android">
+        <preference name="GOOGLE_SERVICES_VERSION" default="11.6.2" />
         <hook type="before_plugin_install" src="src/android/before_plugin_install_hook.js" />
         <hook type="after_prepare" src="src/android/after_prepare_hook.js" />
 
@@ -61,9 +68,9 @@
 
         <source-file src="src/android/CordovaPlugin.java" target-dir="src/io/repro/cordova" />
         <source-file src="src/android/StandardEventPropertiesFactory.java" target-dir="src/io/repro/cordova" />
-        <resource-file src="src/android/repro-android-sdk.aar" target="libs/repro-android-sdk.aar" />
 
-        <framework src="com.google.android.gms:play-services-gcm:7.0.0" />
+        <framework src="com.google.android.gms:play-services-gcm:$GOOGLE_SERVICES_VERSION" />
+        <framework src="io.repro:repro-android-sdk:3.0.0" />
         <framework src="src/android/repro-android-sdk.gradle" custom="true" type="gradleReference" />
 
     </platform>

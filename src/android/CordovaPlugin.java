@@ -118,8 +118,9 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         else if ("enablePushNotification".equals(action)) {
             return enablePushNotification(args, callbackContext);
         }
-        else if ("setPushDeviceToken".equals(action)) {
-            return setPushDeviceToken(args, callbackContext);
+        else if ("enablePushNotificationForIOS".equals(action)) {
+            // do nothing
+            return true;
         }
         else if ("getUserID".equals(action)) {
             return getUserID(args, callbackContext);
@@ -618,11 +619,6 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
             }
         });
 
-        return true;
-    }
-
-    private boolean setPushDeviceToken(final CordovaArgs args, final CallbackContext callbackContext) {
-        // do nothing
         return true;
     }
 

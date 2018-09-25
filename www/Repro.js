@@ -138,11 +138,19 @@ Repro.prototype.trackCompleteRegistration = function(properties, successCallback
 };
 
 Repro.prototype.setPushDeviceToken = function(deviceToken, successCallback, errorCallback) {
-    exec(successCallback, errorCallback, "Repro", "setPushDeviceToken", [deviceToken]);
+    // Deprecated
 };
 
 Repro.prototype.enablePushNotification = function(senderId, successCallback, errorCallback) {
     exec(successCallback, errorCallback, "Repro", "enablePushNotification", [senderId]);
+};
+
+Repro.prototype.enablePushNotificationForAndroid = function(senderId, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "enablePushNotification", [senderId]);
+};
+
+Repro.prototype.enablePushNotificationForIOS= function(successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "enablePushNotificationForIOS", []);
 };
 
 Repro.prototype.showInAppMessage = function(successCallback, errorCallback) {

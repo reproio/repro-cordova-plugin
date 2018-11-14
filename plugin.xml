@@ -2,7 +2,7 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     id="cordova-plugin-repro"
-    version="4.1.0">
+    version="4.2.0">
     <name>Repro</name>
     <description>Repro Cordova Plugin</description>
     <license>Commercial</license>
@@ -47,7 +47,8 @@
 
     <!-- android -->
     <platform name="android">
-        <preference name="GOOGLE_SERVICES_VERSION" default="11.6.2" />
+        <preference name="FIREBASE_CORE_VERSION" default="16.0.4" />
+        <preference name="FIREBASE_MESSAGING_VERSION" default="17.3.4" />
         <hook type="before_plugin_install" src="src/android/before_plugin_install_hook.js" />
         <hook type="after_prepare" src="src/android/after_prepare_hook.js" />
 
@@ -68,9 +69,10 @@
 
         <source-file src="src/android/CordovaPlugin.java" target-dir="src/io/repro/cordova" />
         <source-file src="src/android/StandardEventPropertiesFactory.java" target-dir="src/io/repro/cordova" />
+        <resource-file src="src/android/repro-android-sdk.aar" target="libs/repro-android-sdk.aar"/>
 
-        <framework src="com.google.android.gms:play-services-gcm:$GOOGLE_SERVICES_VERSION" />
-        <framework src="io.repro:repro-android-sdk:3.0.0" />
+        <framework src="com.google.firebase:firebase-core:$FIREBASE_CORE_VERSION" />
+        <framework src="com.google.firebase:firebase-messaging:$FIREBASE_MESSAGING_VERSION" />
         <framework src="src/android/repro-android-sdk.gradle" custom="true" type="gradleReference" />
 
     </platform>

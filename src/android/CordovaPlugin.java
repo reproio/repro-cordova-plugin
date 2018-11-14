@@ -610,11 +610,9 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
     }
 
     private boolean enablePushNotification(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
-        final String senderId = args.getString(0);
-
         callAPI(new API(callbackContext) {
             Void api() {
-                Repro.enablePushNotification(senderId);
+                Repro.enablePushNotification();
                 return null;
             }
         });

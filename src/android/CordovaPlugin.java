@@ -34,6 +34,9 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         if ("setup".equals(action)) {
             return setup(args, callbackContext);
         }
+        else if ("optIn".equals(action)) {
+            return optIn(args, callbackContext);
+        }
         else if ("setLogLevel".equals(action)) {
             return setLogLevel(args, callbackContext);
         }
@@ -143,6 +146,19 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         callAPI(new API(callbackContext) {
             Void api() {
                 CordovaBridge.startSession(token);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean optIn(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final boolean endUserOptedIn = args.getBoolean(0);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.optIn(endUserOptedIn);
                 return null;
             }
         });

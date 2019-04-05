@@ -20,6 +20,12 @@
     [Repro setup:key];
 }
 
+- (void)optIn:(CDVInvokedUrlCommand*)command
+{
+    NSNumber *endUserOptedIn = [command.arguments objectAtIndex:0];
+    [Repro optIn:[endUserOptedIn boolValue]];
+}
+
 - (void)setLogLevel:(CDVInvokedUrlCommand*)command
 {
     NSString *logLevel = [command.arguments objectAtIndex:0];

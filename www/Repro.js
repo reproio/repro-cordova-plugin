@@ -6,6 +6,10 @@ Repro.prototype.setup = function(key, successCallback, errorCallback) {
     exec(successCallback, errorCallback, "Repro", "setup", [key]);
 };
 
+Repro.prototype.optIn = function(endUserOptedIn, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "optIn", [endUserOptedIn]);
+};
+
 Repro.prototype.setLogLevel = function(logLevel, successCallback, errorCallback) {
     exec(successCallback, errorCallback, "Repro", "setLogLevel", [logLevel]);
 };

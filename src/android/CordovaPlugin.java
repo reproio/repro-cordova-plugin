@@ -40,27 +40,6 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         else if ("setLogLevel".equals(action)) {
             return setLogLevel(args, callbackContext);
         }
-        else if ("startRecording".equals(action)) {
-            return startRecording(args, callbackContext);
-        }
-        else if ("stopRecording".equals(action)) {
-            return stopRecording(args, callbackContext);
-        }
-        else if ("pauseRecording".equals(action)) {
-            return pauseRecording(args, callbackContext);
-        }
-        else if ("resumeRecording".equals(action)) {
-            return resumeRecording(args, callbackContext);
-        }
-        else if ("maskWithRect".equals(action)) {
-            return maskWithRect(args, callbackContext);
-        }
-        else if ("maskFullScreen".equals(action)) {
-            return maskFullScreen(args, callbackContext);
-        }
-        else if ("unmask".equals(action)) {
-            return unmask(args, callbackContext);
-        }
         else if ("setUserID".equals(action)) {
             return setUserID(args, callbackContext);
         }
@@ -180,94 +159,6 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
                 } else if ("Error".equals(logLevel)) {
                     Repro.setLogLevel(android.util.Log.ERROR);
                 }
-                return null;
-            }
-        });
-
-        return true;
-    }
-
-    private boolean startRecording(final CordovaArgs args, final CallbackContext callbackContext) {
-        callAPI(new API(callbackContext) {
-            Void api() {
-                Repro.startRecording();
-                return null;
-            }
-        });
-        return true;
-    }
-
-    private boolean stopRecording(final CordovaArgs args, final CallbackContext callbackContext) {
-        callAPI(new API(callbackContext) {
-            Void api() {
-                Repro.stopRecording();
-                return null;
-            }
-        });
-        return true;
-    }
-
-    private boolean pauseRecording(final CordovaArgs args, final CallbackContext callbackContext) {
-        callAPI(new API(callbackContext) {
-            Void api() {
-                Repro.pauseRecording();
-                return null;
-            }
-        });
-        return true;
-    }
-
-    private boolean resumeRecording(final CordovaArgs args, final CallbackContext callbackContext) {
-        callAPI(new API(callbackContext) {
-            Void api() {
-                Repro.resumeRecording();
-                return null;
-            }
-        });
-        return true;
-    }
-
-    private boolean maskWithRect(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
-        final String key = args.getString(0);
-        final int x = args.getInt(1);
-        final int y = args.getInt(2);
-        final int w = args.getInt(3);
-        final int h = args.getInt(4);
-
-        callAPI(new API(callbackContext) {
-            Void api() {
-                Repro.mask(key, new Rect(x, y, w+x, h+y));
-                return null;
-            }
-        });
-
-        return true;
-    }
-
-    private boolean maskFullScreen(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
-        final String key = args.getString(0);
-
-        final WindowManager wm = (WindowManager)cordova.getActivity().getSystemService(Context.WINDOW_SERVICE);
-        final Display display = wm.getDefaultDisplay();
-        final Point size = new Point();
-        display.getRealSize(size);
-
-        callAPI(new API(callbackContext) {
-            Void api() {
-                Repro.mask(key, new Rect(0, 0, size.x, size.y));
-                return null;
-            }
-        });
-
-        return true;
-    }
-
-    private boolean unmask(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
-        final String key = args.getString(0);
-
-        callAPI(new API(callbackContext) {
-            Void api() {
-                Repro.unmask(key);
                 return null;
             }
         });

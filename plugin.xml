@@ -2,7 +2,7 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     id="cordova-plugin-repro"
-    version="4.4.1">
+    version="5.0.0">
     <name>Repro</name>
     <description>Repro Cordova Plugin</description>
     <license>Commercial</license>
@@ -39,6 +39,7 @@
         <framework src="QuartzCore.framework" />
         <framework src="Security.framework" />
         <framework src="SystemConfiguration.framework" />
+        <framework src="WebKit.framework" />
         <framework src="libz.dylib" />
 
         <framework src="src/ios/Repro.embeddedframework/Repro.framework" custom="true" />

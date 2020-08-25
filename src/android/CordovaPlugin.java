@@ -6,10 +6,15 @@ import android.graphics.Rect;
 import android.view.Display;
 import android.view.WindowManager;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaArgs;
@@ -20,12 +25,19 @@ import org.json.JSONObject;
 
 import io.repro.android.Repro;
 import io.repro.android.CordovaBridge;
+import io.repro.android.newsfeed.NewsFeedEntry;
 
 /**
  * Created by nekoe on 1/15/16.
  * Copyright (c) 2016 Repro Inc. All rights reserved.
  */
 public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
+
+    private static SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
+
+    static {
+        sDateFormat.setTimeZone(TimeZone.getTimeZone("gmt"));
+    }
 
     // Cordova I/F
 
@@ -91,11 +103,11 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         else if ("trackCompleteRegistration".equals(action)) {
             return trackCompleteRegistration(args, callbackContext);
         }
-        else if ("showInAppMessage".equals(action)) {
-            return showInAppMessage(args, callbackContext);
+        else if ("enableInAppMessagesOnForegroundTransition".equals(action)) {
+            return enableInAppMessagesOnForegroundTransition(args, callbackContext);
         }
-        else if ("disableInAppMessageOnActive".equals(action)) {
-            return disableInAppMessageOnActive(args, callbackContext);
+        else if ("disableInAppMessagesOnForegroundTransition".equals(action)) {
+            return disableInAppMessagesOnForegroundTransition(args, callbackContext);
         }
         else if ("enablePushNotification".equals(action)) {
             return enablePushNotification(args, callbackContext);
@@ -112,6 +124,21 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         }
         else if ("trackNotificationOpened".equals(action)) {
             return trackNotificationOpened(args, callbackContext);
+        }
+        else if ("setSilverEggCookie".equals(action)) {
+            return setSilverEggCookie(args, callbackContext);
+        }
+        else if ("setSilverEggProdKey".equals(action)) {
+            return setSilverEggProdKey(args, callbackContext);
+        }
+        else if ("getNewsFeedsWithLimit".equals(action)) {
+            return getNewsFeedsWithLimit(args, callbackContext);
+        }
+        else if ("getNewsFeedsWithLimitAndOffsetId".equals(action)) {
+            return getNewsFeedsWithLimitAndOffsetId(args, callbackContext);
+        }
+        else if ("updateNewsFeeds".equals(action)) {
+            return updateNewsFeeds(args, callbackContext);
         }
 
         return false;
@@ -496,20 +523,20 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         return true;
     }
 
-    private boolean showInAppMessage(final CordovaArgs args, final CallbackContext callbackContext) {
+    private boolean enableInAppMessagesOnForegroundTransition(final CordovaArgs args, final CallbackContext callbackContext) {
         callAPI(new API(callbackContext) {
             Void api() {
-                Repro.showInAppMessage(cordova.getActivity());
+                Repro.enableInAppMessagesOnForegroundTransition(cordova.getActivity());
                 return null;
             }
         });
         return true;
     }
 
-    private boolean disableInAppMessageOnActive(final CordovaArgs args, final CallbackContext callbackContext) {
+    private boolean disableInAppMessagesOnForegroundTransition(final CordovaArgs args, final CallbackContext callbackContext) {
         callAPI(new API(callbackContext) {
             Void api() {
-                Repro.disableInAppMessageOnActive();
+                Repro.disableInAppMessagesOnForegroundTransition();
                 return null;
             }
         });
@@ -554,6 +581,155 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
             Void api() {
                 Repro.trackNotificationOpened(notificationId);
                 return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean setSilverEggCookie(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final Object cookie = args.opt(0);
+        if (!(cookie instanceof String)) {
+            android.util.Log.e("Repro", "Didn't set silver egg cookie: silver egg cookie is required, and should be String. null or undefined is not allowed.");
+            return true;
+        }
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.setSilverEggCookie((String)cookie);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean setSilverEggProdKey(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final Object prodKey = args.opt(0);
+        if (!(prodKey instanceof String)) {
+            android.util.Log.e("Repro", "Didn't set silver egg prod key: silver egg prod key is required, and should be String. null or undefined is not allowed.");
+            return true;
+        }
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.setSilverEggProdKey((String)prodKey);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean getNewsFeedsWithLimit(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final Object limit = args.opt(0);
+        if (!isValidNewsFeedRequestParam(limit)) {
+            android.util.Log.e("Repro", "Didn't get NewsFeed: limit should be Number and more than 0.");
+            return true;
+        }
+
+        cordova.getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                JSONArray arr = new JSONArray();
+                try {
+                    List<NewsFeedEntry> newsFeedEntries = Repro.getNewsFeeds(((Number) limit).intValue());
+                    for (NewsFeedEntry newsFeedEntry : newsFeedEntries) {
+                        arr.put(newsFeedEntryToJSONObject(newsFeedEntry));
+                    }
+                    callbackContext.success(arr);
+                } catch (Exception e) {
+                    callbackContext.error("Failed to get NewsFeeds: " + e.getMessage());
+                }
+            }
+        });
+
+        return true;
+    }
+
+    private boolean getNewsFeedsWithLimitAndOffsetId(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final Object limit = args.opt(0);
+        if (!isValidNewsFeedRequestParam(limit)) {
+            android.util.Log.e("Repro", "Didn't get NewsFeed: limit should be Number and more than 0.");
+            return true;
+        }
+
+        final Object offsetId = args.opt(1);
+        if (!isValidNewsFeedRequestParam(offsetId)) {
+            android.util.Log.e("Repro", "Didn't get NewsFeed: offset id should be Number and more than 0.");
+            return true;
+        }
+
+        cordova.getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                JSONArray arr = new JSONArray();
+                try {
+                    List<NewsFeedEntry> newsFeedEntries = Repro.getNewsFeeds(((Number) limit).intValue(), ((Number) offsetId).intValue());
+                    for (NewsFeedEntry newsFeedEntry : newsFeedEntries) {
+                        arr.put(newsFeedEntryToJSONObject(newsFeedEntry));
+                    }
+                    callbackContext.success(arr);
+                } catch (Exception e) {
+                    callbackContext.error("Failed to get NewsFeeds: " + e.getMessage());
+                }
+            }
+        });
+
+        return true;
+    }
+
+    private boolean isValidNewsFeedRequestParam(Object param) {
+        return param instanceof Number && ((Number) param).intValue() > 0;
+    }
+
+    private JSONObject newsFeedEntryToJSONObject(NewsFeedEntry entry) throws Exception {
+        JSONObject entryObject = new JSONObject();
+        String linkUrl = entry.linkUrl.toString().equals("null") ? "" : entry.linkUrl.toString();
+        String imageUrl = entry.imageUrl.toString().equals("null") ? "" : entry.imageUrl.toString();
+
+        entryObject.put("newsfeed_id", entry.id);
+        entryObject.put("device_id", entry.deviceID);
+        entryObject.put("title", entry.title);
+        entryObject.put("summary", entry.summary);
+        entryObject.put("body", entry.body);
+        entryObject.put("link_url", linkUrl);
+        entryObject.put("image_url", imageUrl);
+        entryObject.put("delivered_at", sDateFormat.format(entry.deliveredAt));
+        entryObject.put("shown", entry.shown);
+        entryObject.put("read", entry.read);
+
+        return entryObject;
+    }
+
+    private boolean updateNewsFeeds(final CordovaArgs args, final CallbackContext callbackContext) {
+        final JSONArray newsFeedEntries = args.optJSONArray(0);
+        if (newsFeedEntries == null) {
+            android.util.Log.e("Repro", "Should pass Array.");
+            return true;
+        }
+
+        final List<NewsFeedEntry> newsFeedEntryList = new ArrayList<>();
+
+        try {
+            for (int i = 0; i < newsFeedEntries.length(); i++) {
+                NewsFeedEntry newsFeedEntry = new NewsFeedEntry(newsFeedEntries.optJSONObject(i));
+                newsFeedEntryList.add(newsFeedEntry);
+            }
+        } catch (Exception e) {
+            callbackContext.error("Something wrong with passed NewsFeed: " + e.getMessage());
+            return true;
+        }
+
+        cordova.getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Repro.updateNewsFeeds(newsFeedEntryList);
+                    callbackContext.success("success");
+                } catch (Exception e) {
+                    callbackContext.error("Failed to update NewsFeed");
+                }
             }
         });
 

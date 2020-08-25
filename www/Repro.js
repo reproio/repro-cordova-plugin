@@ -98,12 +98,12 @@ Repro.prototype.enablePushNotificationForIOS= function(successCallback, errorCal
     exec(successCallback, errorCallback, "Repro", "enablePushNotificationForIOS", []);
 };
 
-Repro.prototype.showInAppMessage = function(successCallback, errorCallback) {
-    exec(successCallback, errorCallback, "Repro", "showInAppMessage", []);
+Repro.prototype.enableInAppMessagesOnForegroundTransition = function(successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "enableInAppMessagesOnForegroundTransition", []);
 };
 
-Repro.prototype.disableInAppMessageOnActive = function(successCallback, errorCallback) {
-    exec(successCallback, errorCallback, "Repro", "disableInAppMessageOnActive", []);
+Repro.prototype.disableInAppMessagesOnForegroundTransition = function(successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "disableInAppMessagesOnForegroundTransition", []);
 };
 
 Repro.prototype.getUserID = function(successCallback, errorCallback) {
@@ -116,6 +116,26 @@ Repro.prototype.getDeviceID = function(successCallback, errorCallback) {
 
 Repro.prototype.trackNotificationOpened = function(notificationId, successCallback, errorCallback) {
     exec(successCallback, errorCallback, "Repro", "trackNotificationOpened", [notificationId]);
+};
+
+Repro.prototype.setSilverEggCookie = function(cookie, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "setSilverEggCookie", [cookie]);
+};
+
+Repro.prototype.setSilverEggProdKey = function(prodKey, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "setSilverEggProdKey", [prodKey]);
+};
+
+Repro.prototype.getNewsFeedsWithLimit = function(limit, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "getNewsFeedsWithLimit", [limit]);
+};
+
+Repro.prototype.getNewsFeedsWithLimitAndOffsetId = function(limit, offsetId, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "getNewsFeedsWithLimitAndOffsetId", [limit, offsetId]);
+};
+
+Repro.prototype.updateNewsFeeds = function(newsFeeds, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "updateNewsFeeds", [newsFeeds]);
 };
 
 module.exports = new Repro();

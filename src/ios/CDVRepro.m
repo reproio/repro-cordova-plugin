@@ -8,9 +8,12 @@
 #import <UserNotifications/UserNotifications.h>
 
 #import "Repro/Repro.h"
+#import "Repro/RPRNewsFeedEntry.h"
 
 #import "CDVRepro.h"
 #import "CDVReproEventPropertiesFactory.h"
+
+#define isNSNumber(OBJECT)           ([OBJECT isKindOfClass:NSNumber.class])
 
 @implementation CDVRepro
 
@@ -284,14 +287,14 @@
     }
 }
 
-- (void)showInAppMessage:(CDVInvokedUrlCommand*)command
+- (void)enableInAppMessagesOnForegroundTransition:(CDVInvokedUrlCommand*)command
 {
-    [Repro showInAppMessage];
+    [Repro enableInAppMessagesOnForegroundTransition];
 }
 
-- (void)disableInAppMessageOnActive:(CDVInvokedUrlCommand*)command
+- (void)disableInAppMessagesOnForegroundTransition:(CDVInvokedUrlCommand*)command
 {
-    [Repro disableInAppMessageOnActive];
+    [Repro disableInAppMessagesOnForegroundTransition];
 }
 
 - (void)getUserID:(CDVInvokedUrlCommand*)command
@@ -322,6 +325,165 @@ static NSDictionary* convertNSStringJSONToNSDictionary(NSString* json) {
     } else {
         return nil;
     }
+}
+
+- (void)setSilverEggCookie:(CDVInvokedUrlCommand*)command
+{
+  id cookie = [command.arguments objectAtIndex:0];
+  if (![cookie isKindOfClass:NSString.class]) {
+    NSLog(@"ERROR: Repro Didn't set silver egg cookie: silver egg cookie is required, and should be String. null or undefined is not allowed.");
+    return;
+  }
+
+  [Repro setSilverEggCookie:cookie];
+}
+
+- (void)setSilverEggProdKey:(CDVInvokedUrlCommand*)command
+{
+  id prodKey = [command.arguments objectAtIndex:0];
+  if (![prodKey isKindOfClass:NSString.class]) {
+    NSLog(@"ERROR: Repro Didn't set silver egg prod key: silver egg prod key is required, and should be String. null or undefined is not allowed.");
+    return;
+  }
+
+  [Repro setSilverEggProdKey:prodKey];
+}
+
+- (void)getNewsFeedsWithLimit:(CDVInvokedUrlCommand*)command
+{
+  NSNumber* limit = [command.arguments objectAtIndex:0];
+  if (![self isValidNewsFeedRequestParam:limit]) {
+    NSLog(@"ERROR: Repro Didn't get NewsFeed: limit should be Number and more than 0.");
+    return;
+  }
+
+  [self.commandDelegate runInBackground:^{
+    NSError *error = nil;
+    NSArray<RPRNewsFeedEntry *> *entries = [Repro getNewsFeeds:[limit unsignedLongLongValue] error:&error];
+
+    if (error)
+    {
+      NSString *errString = [error localizedDescription];
+      NSString *errMessage = [NSString.alloc initWithFormat:@"Failed to get NewsFeeds: %@", errString];
+      CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:errMessage];
+      [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+      return;
+    }
+
+    NSMutableArray<NSDictionary *> *arr = [NSMutableArray.alloc initWithCapacity:entries.count];
+    for (RPRNewsFeedEntry *entry in entries) {
+      [arr addObject:[self newsFeedEntryToDictionary:entry]];
+    }
+
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:arr];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+  }];
+}
+
+- (void)getNewsFeedsWithLimitAndOffsetId:(CDVInvokedUrlCommand*)command
+{
+  NSNumber* limit = [command.arguments objectAtIndex:0];
+  if (![self isValidNewsFeedRequestParam:limit]) {
+    NSLog(@"ERROR: Repro Didn't get NewsFeed: limit should be Number and more than 0.");
+    return;
+  }
+
+  NSNumber* offsetId = [command.arguments objectAtIndex:1];
+  if (![self isValidNewsFeedRequestParam:offsetId])
+  {
+    NSLog(@"ERROR: Repro Didn't get NewsFeed: offset id should be Number and more than 0.");
+    return;
+  }
+
+  [self.commandDelegate runInBackground:^{
+    NSError *error = nil;
+    NSArray<RPRNewsFeedEntry *> *entries = [Repro getNewsFeeds:[limit unsignedLongLongValue] offsetID:[offsetId unsignedLongLongValue] error:&error];
+
+    if (error)
+    {
+      NSString *errString = [error localizedDescription];
+      NSString *errMessage = [NSString.alloc initWithFormat:@"Failed to get NewsFeeds: %@", errString];
+      CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:errMessage];
+      [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+      return;
+    }
+
+    NSMutableArray<NSDictionary *> *arr = [NSMutableArray.alloc initWithCapacity:entries.count];
+    for (RPRNewsFeedEntry *entry in entries) {
+      [arr addObject:[self newsFeedEntryToDictionary:entry]];
+    }
+
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:arr];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+  }];
+}
+
+- (NSDictionary*)newsFeedEntryToDictionary:(RPRNewsFeedEntry *)entry
+{
+  NSDictionary *entryJson = @{
+    @"newsfeed_id": @(entry.ID),
+    @"device_id": entry.deviceID,
+    @"title": entry.title,
+    @"summary": entry.summary,
+    @"body": entry.body,
+    @"shown": @(entry.shown),
+    @"read": @(entry.read),
+    @"delivered_at": [[self dateFormatter] stringFromDate:entry.deliveredAt],
+    @"link_url": entry.linkUrl ? [entry.linkUrl absoluteString] : @"",
+    @"image_url": entry.imageUrl ? [entry.imageUrl absoluteString] : @""
+  };
+
+  return entryJson;
+}
+
+- (NSDateFormatter*)dateFormatter
+{
+  static NSDateFormatter* formatter = nil;
+  if (!formatter) {
+    formatter = [NSDateFormatter.alloc init];
+    formatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ssZZZ";
+    formatter.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
+    formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    formatter.calendar = [NSCalendar.alloc initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+  }
+
+  return formatter;
+}
+
+- (BOOL)isValidNewsFeedRequestParam:(NSNumber *)param
+{
+  return isNSNumber(param) && [param integerValue] > 0;
+}
+
+- (void)updateNewsFeeds:(CDVInvokedUrlCommand*)command
+{
+  NSArray<NSDictionary *> *newsFeedEntries = [command.arguments objectAtIndex:0];
+  if (![newsFeedEntries isKindOfClass:NSArray.class])
+  {
+    NSLog(@"ERROR: Repro Should pass Array.");
+    return;
+  }
+
+  NSMutableArray<RPRNewsFeedEntry *> *newsFeedEntryArray = [NSMutableArray.alloc initWithCapacity:newsFeedEntries.count];
+
+  for (NSDictionary *newsFeedEntry in newsFeedEntries) {
+    [newsFeedEntryArray addObject:[RPRNewsFeedEntry.alloc initWithDictionary:newsFeedEntry]];
+  }
+
+  [self.commandDelegate runInBackground:^{
+    NSError *error = nil;
+    [Repro updateNewsFeeds:newsFeedEntryArray error:&error];
+
+    if (error)
+    {
+      CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Failed to update NewsFeed"];
+      [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }
+    else {
+      CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"success"];
+      [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }
+  }];
 }
 
 @end

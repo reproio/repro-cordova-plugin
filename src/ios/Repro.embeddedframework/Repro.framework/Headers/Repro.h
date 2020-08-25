@@ -6,9 +6,10 @@
 
 #import <Foundation/Foundation.h>
 
-#import "RPREventProperties.h"
-#import "RPRUserProfileGender.h"
-#import "RPRRemoteConfig.h"
+#import <Repro/RPREventProperties.h>
+#import <Repro/RPRUserProfileGender.h>
+#import <Repro/RPRRemoteConfig.h>
+#import <Repro/RPRNewsFeedEntry.h>
 
 @protocol WKNavigationDelegate;
 
@@ -121,11 +122,12 @@ NS_SWIFT_NAME(setPushDeviceToken(string:));
 
 
 // In App Message
-+ (void)disableInAppMessageOnActive
-NS_SWIFT_NAME(disableInAppMessageOnActive());
 
-+ (void)showInAppMessage
-NS_SWIFT_NAME(showInAppMessage());
++ (void)enableInAppMessagesOnForegroundTransition
+NS_SWIFT_NAME(enableInAppMessagesOnForegroundTransition());
+
++ (void)disableInAppMessagesOnForegroundTransition
+NS_SWIFT_NAME(disableInAppMessagesOnForegroundTransition());
 
 // Silver Egg In-app
 + (void)setSilverEggCookie:(nonnull NSString *)silverEggCookie
@@ -136,5 +138,18 @@ NS_SWIFT_NAME(set(silverEggProdKey:));
 
 // Remote Configuration
 @property (class, nonatomic, readonly, nonnull) RPRRemoteConfig *remoteConfig;
+
+// NewsFeed
++ (nullable NSArray<RPRNewsFeedEntry *> *)getNewsFeeds:(uint64_t)limit
+                                                 error:(NSError * _Nullable * _Nullable)error
+NS_SWIFT_NAME(getNewsFeeds(_:));
+
++ (nullable NSArray<RPRNewsFeedEntry *> *)getNewsFeeds:(uint64_t)limit
+                                              offsetID:(uint64_t)offsetID
+                                                 error:(NSError * _Nullable * _Nullable)error
+NS_SWIFT_NAME(getNewsFeeds(_:offsetID:));
+
++ (BOOL)updateNewsFeeds:(nonnull NSArray<RPRNewsFeedEntry *> *)newsFeeds error:(NSError * _Nullable * _Nullable)error
+NS_SWIFT_NAME(updateNewsFeeds(_:));
 
 @end

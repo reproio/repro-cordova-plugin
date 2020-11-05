@@ -1,6 +1,6 @@
 # Repro Cordova Plugin
 
-[Repro](https://repro.io/) is a mobile analytics tool that lets you have much deeper understanding of mobile app users with play-by-play videos.
+[Repro](https://repro.io/) is a mobile analytics tool that lets you have much deeper understanding of your users.
 
 ## Supported Platforms
 

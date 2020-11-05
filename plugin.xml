@@ -31,19 +31,10 @@
         <source-file src="src/ios/AppDelegate+CDVReproNotification.m" />
         <header-file src="src/ios/CDVReproEnableSwizzling.h" />
 
-        <framework src="AVFoundation.framework" />
-        <framework src="CoreMedia.framework" />
-        <framework src="CoreVideo.framework" />
-        <framework src="CoreTelephony.framework" />
-        <framework src="MobileCoreServices.framework" />
-        <framework src="QuartzCore.framework" />
-        <framework src="Security.framework" />
         <framework src="SystemConfiguration.framework" />
         <framework src="WebKit.framework" />
-        <framework src="libz.dylib" />
 
-        <framework src="src/ios/Repro.embeddedframework/Repro.framework" custom="true" />
-        <resource-file src="src/ios/Repro.embeddedframework/Repro.framework/ReproSDKResources.bundle" />
+        <framework src="src/ios/Repro.framework" custom="true" />
     </platform>
 
     <!-- android -->

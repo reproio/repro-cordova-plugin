@@ -10,11 +10,6 @@ This product includes a part of 'Mixpanel iOS SDK' (https://github.com/mixpanel/
 
 ----------------------------------------------------------------
 
-This product includes 'AFNetworking' (https://github.com/AFNetworking/AFNetworking), which is released under the following license(s):
-    MIT <http://opensource.org/licenses/mit-license.html>
-
-----------------------------------------------------------------
-
 This product includes 'Grafika' (https://github.com/google/grafika), which is released under the following license(s):
     Apatch 2 <http://opensource.org/licenses/Apache-2.0>
 

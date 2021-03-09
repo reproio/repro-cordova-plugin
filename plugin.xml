@@ -1,72 +1,73 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-    id="cordova-plugin-repro"
-    version="6.0.0">
+<plugin xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-repro" version="6.3.0" xmlns="http://apache.org/cordova/ns/plugins/1.0">
     <name>Repro</name>
     <description>Repro Cordova Plugin</description>
     <license>Commercial</license>
     <keywords>repro,analytics</keywords>
 
-    <js-module src="www/Repro.js" name="Repro">
-        <clobbers target="Repro" />
+    <js-module name="Repro" src="www/Repro.js">
+        <clobbers target="Repro"/>
     </js-module>
 
     <!-- ios -->
     <platform name="ios">
-        <preference name="ENABLE_IOS_PUSH" default="true" />
-        <hook type="after_prepare" src="src/ios/after_prepare_hook.js" />
+        <preference default="true" name="ENABLE_IOS_PUSH"/>
+        <hook src="src/ios/after_prepare_hook.js" type="after_prepare"/>
 
-        <config-file target="config.xml" parent="/*">
+        <config-file parent="/*" target="config.xml">
             <feature name="Repro">
                 <param name="ios-package" value="CDVRepro"/>
             </feature>
         </config-file>
 
-        <header-file src="src/ios/CDVRepro.h" />
-        <source-file src="src/ios/CDVRepro.m" />
-        <header-file src="src/ios/CDVReproEventPropertiesFactory.h" />
-        <source-file src="src/ios/CDVReproEventPropertiesFactory.m" />
-        <header-file src="src/ios/AppDelegate+CDVReproNotification.h" />
-        <source-file src="src/ios/AppDelegate+CDVReproNotification.m" />
-        <header-file src="src/ios/CDVReproEnableSwizzling.h" />
+        <header-file src="src/ios/CDVRepro.h"/>
+        <source-file src="src/ios/CDVRepro.m"/>
+        <header-file src="src/ios/CDVReproEventPropertiesFactory.h"/>
+        <source-file src="src/ios/CDVReproEventPropertiesFactory.m"/>
+        <header-file src="src/ios/AppDelegate+CDVReproNotification.h"/>
+        <source-file src="src/ios/AppDelegate+CDVReproNotification.m"/>
+        <header-file src="src/ios/CDVReproEnableSwizzling.h"/>
 
-        <framework src="SystemConfiguration.framework" />
-        <framework src="WebKit.framework" />
+        <framework src="SystemConfiguration.framework"/>
+        <framework src="WebKit.framework"/>
 
-        <framework src="src/ios/Repro.framework" custom="true" />
+        <framework custom="true" src="src/ios/Repro.framework"/>
     </platform>
 
     <!-- android -->
     <platform name="android">
-        <preference name="FIREBASE_CORE_VERSION" default="16.0.4" />
-        <preference name="FIREBASE_MESSAGING_VERSION" default="17.3.4" />
-        <hook type="before_plugin_install" src="src/android/before_plugin_install_hook.js" />
-        <hook type="after_prepare" src="src/android/after_prepare_hook.js" />
+        <preference default="16.0.4" name="FIREBASE_CORE_VERSION"/>
+        <preference default="17.3.4" name="FIREBASE_MESSAGING_VERSION"/>
+        <hook src="src/android/before_plugin_install_hook.js" type="before_plugin_install"/>
+        <hook src="src/android/after_prepare_hook.js" type="after_prepare"/>
 
-        <config-file target="config.xml" parent="/*">
+        <config-file parent="/*" target="config.xml">
             <feature name="Repro">
                 <param name="android-package" value="io.repro.cordova.CordovaPlugin"/>
             </feature>
         </config-file>
 
-        <config-file target="AndroidManifest.xml" parent="/manifest">
-            <uses-permission android:name="android.permission.INTERNET" />
-            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+        <config-file parent="/manifest" target="AndroidManifest.xml">
+            <uses-permission android:name="android.permission.INTERNET"/>
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
         </config-file>
 
-        <config-file target="AndroidManifest.xml" parent="/manifest/application">
-            <service android:name="io.repro.android.ReproService" />
+        <config-file parent="/manifest/application" target="AndroidManifest.xml">
+            <service android:name="io.repro.android.ReproService"/>
         </config-file>
 
-        <source-file src="src/android/CordovaPlugin.java" target-dir="src/io/repro/cordova" />
-        <source-file src="src/android/StandardEventPropertiesFactory.java" target-dir="src/io/repro/cordova" />
+        <source-file src="src/android/CordovaPlugin.java" target-dir="src/io/repro/cordova"/>
+        <source-file src="src/android/StandardEventPropertiesFactory.java" target-dir="src/io/repro/cordova"/>
         <resource-file src="src/android/repro-android-sdk.aar" target="libs/repro-android-sdk.aar"/>
 
-        <framework src="com.google.firebase:firebase-core:$FIREBASE_CORE_VERSION" />
-        <framework src="com.google.firebase:firebase-messaging:$FIREBASE_MESSAGING_VERSION" />
-        <framework src="src/android/repro-android-sdk.gradle" custom="true" type="gradleReference" />
+        <framework src="com.google.firebase:firebase-core:$FIREBASE_CORE_VERSION"/>
+        <framework src="com.google.firebase:firebase-messaging:$FIREBASE_MESSAGING_VERSION"/>
+        <framework custom="true" src="src/android/repro-android-sdk.gradle" type="gradleReference"/>
 
     </platform>
 
 </plugin>
+
+
+

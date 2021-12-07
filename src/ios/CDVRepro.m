@@ -418,6 +418,104 @@ static NSDictionary* convertNSStringJSONToNSDictionary(NSString* json) {
   }];
 }
 
+- (void)getNewsFeedsWithLimitAndCampaignType:(CDVInvokedUrlCommand*)command
+{
+  NSNumber* limit = [command.arguments objectAtIndex:0];
+  if (![self isValidNewsFeedRequestParam:limit]) {
+    NSLog(@"ERROR: Repro Didn't get NewsFeed: limit should be Number and more than 0.");
+    return;
+  }
+
+  NSString* rawCampaignType = [command.arguments objectAtIndex:1];
+  RPRCampaignType convertedCampaigntype = [self getNewsFeedCampaignType:rawCampaignType];
+
+  [self.commandDelegate runInBackground:^{
+    NSError *error = nil;
+    NSArray<RPRNewsFeedEntry *> *entries = [Repro getNewsFeeds:[limit unsignedLongLongValue] campaignType:convertedCampaigntype error:&error];
+
+    if (error)
+    {
+      NSString *errString = [error localizedDescription];
+      NSString *errMessage = [NSString.alloc initWithFormat:@"Failed to get NewsFeeds: %@", errString];
+      CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:errMessage];
+      [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+      return;
+    }
+
+    NSMutableArray<NSDictionary *> *arr = [NSMutableArray.alloc initWithCapacity:entries.count];
+    for (RPRNewsFeedEntry *entry in entries) {
+      [arr addObject:[self newsFeedEntryToDictionary:entry]];
+    }
+
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:arr];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+  }];
+}
+
+- (void)getNewsFeedsWithLimitAndOffsetIdAndCampaignType:(CDVInvokedUrlCommand*)command
+{
+  NSNumber* limit = [command.arguments objectAtIndex:0];
+  if (![self isValidNewsFeedRequestParam:limit]) {
+    NSLog(@"ERROR: Repro Didn't get NewsFeed: limit should be Number and more than 0.");
+    return;
+  }
+
+  NSNumber* offsetId = [command.arguments objectAtIndex:1];
+  if (![self isValidNewsFeedRequestParam:offsetId])
+  {
+    NSLog(@"ERROR: Repro Didn't get NewsFeed: offset id should be Number and more than 0.");
+    return;
+  }
+
+  NSString* rawCampaignType = [command.arguments objectAtIndex:2];
+  RPRCampaignType convertedCampaigntype = [self getNewsFeedCampaignType:rawCampaignType];
+
+  [self.commandDelegate runInBackground:^{
+    NSError *error = nil;
+    NSArray<RPRNewsFeedEntry *> *entries = [Repro getNewsFeeds:[limit unsignedLongLongValue] offsetID:[offsetId unsignedLongLongValue] campaignType:convertedCampaigntype error:&error];
+
+    if (error)
+    {
+      NSString *errString = [error localizedDescription];
+      NSString *errMessage = [NSString.alloc initWithFormat:@"Failed to get NewsFeeds: %@", errString];
+      CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:errMessage];
+      [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+      return;
+    }
+
+    NSMutableArray<NSDictionary *> *arr = [NSMutableArray.alloc initWithCapacity:entries.count];
+    for (RPRNewsFeedEntry *entry in entries) {
+      [arr addObject:[self newsFeedEntryToDictionary:entry]];
+    }
+
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:arr];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+  }];
+}
+
+- (RPRCampaignType)getNewsFeedCampaignType:(nullable NSString *)rawCampaignType
+{
+    if (![rawCampaignType isKindOfClass:NSString.class]) {
+      return RPRCampaignTypeUnknown;
+    }
+
+    if ([rawCampaignType isEqualToString:@"push_notification"]) {
+      return RPRCampaignTypePushNotification;
+    }
+    else if ([rawCampaignType isEqualToString:@"in_app_message"]) {
+      return RPRCampaignTypeInAppMessage;
+    }
+    else if ([rawCampaignType isEqualToString:@"web_message"]) {
+      return RPRCampaignTypeWebMessage;
+    }
+    else if ([rawCampaignType isEqualToString:@"all"]) {
+      return RPRCampaignTypeAll;
+    }
+    else {
+      return RPRCampaignTypeUnknown;
+    }
+}
+
 - (NSDictionary*)newsFeedEntryToDictionary:(RPRNewsFeedEntry *)entry
 {
   NSDictionary *entryJson = @{
@@ -429,6 +527,7 @@ static NSDictionary* convertNSStringJSONToNSDictionary(NSString* json) {
     @"shown": @(entry.shown),
     @"read": @(entry.read),
     @"delivered_at": [[self dateFormatter] stringFromDate:entry.deliveredAt],
+    @"campaign_type": [self convertCampaignTypeToString:entry.campaignType],
     @"link_url": entry.linkUrl ? [entry.linkUrl absoluteString] : @"",
     @"image_url": entry.imageUrl ? [entry.imageUrl absoluteString] : @""
   };
@@ -484,6 +583,23 @@ static NSDictionary* convertNSStringJSONToNSDictionary(NSString* json) {
       [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }
   }];
+}
+
+- (NSString *)convertCampaignTypeToString:(RPRCampaignType)campaignType
+{
+    switch (campaignType) {
+        case RPRCampaignTypePushNotification:
+            return @"push_notification";
+        case RPRCampaignTypeInAppMessage:
+            return @"in_app_message";
+        case RPRCampaignTypeWebMessage:
+            return @"web_message";
+        case RPRCampaignTypeAll:
+            return @"all";
+
+        default:
+            return @"unknown";
+    }
 }
 
 @end

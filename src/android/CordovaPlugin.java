@@ -7,6 +7,7 @@ import android.view.Display;
 import android.view.WindowManager;
 
 import java.text.SimpleDateFormat;
+import java.util.EnumSet;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -26,6 +27,7 @@ import org.json.JSONObject;
 import io.repro.android.Repro;
 import io.repro.android.CordovaBridge;
 import io.repro.android.newsfeed.NewsFeedEntry;
+import io.repro.android.newsfeed.NewsFeedCampaignType;
 
 /**
  * Created by nekoe on 1/15/16.
@@ -137,6 +139,12 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         else if ("getNewsFeedsWithLimitAndOffsetId".equals(action)) {
             return getNewsFeedsWithLimitAndOffsetId(args, callbackContext);
         }
+        else if ("getNewsFeedsWithLimitAndCampaignType".equals(action)) {
+            return getNewsFeedsWithLimitAndCampaignType(args, callbackContext);
+        }
+        else if ("getNewsFeedsWithLimitAndOffsetIdAndCampaignType".equals(action)) {
+            return getNewsFeedsWithLimitAndOffsetIdAndCampaignType(args, callbackContext);
+        }
         else if ("updateNewsFeeds".equals(action)) {
             return updateNewsFeeds(args, callbackContext);
         }
@@ -145,6 +153,7 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
     }
 
     // API implementation
+    // CordovaArgs: https://github.com/apache/cordova-android/blob/master/framework/src/org/apache/cordova/CordovaArgs.java
 
     private boolean setup(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
         final String token = args.getString(0);
@@ -623,7 +632,7 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
 
     private boolean getNewsFeedsWithLimit(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
         final Object limit = args.opt(0);
-        if (!isValidNewsFeedRequestParam(limit)) {
+        if (!isValidNewsFeedRequestNumericParam(limit)) {
             android.util.Log.e("Repro", "Didn't get NewsFeed: limit should be Number and more than 0.");
             return true;
         }
@@ -649,13 +658,13 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
 
     private boolean getNewsFeedsWithLimitAndOffsetId(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
         final Object limit = args.opt(0);
-        if (!isValidNewsFeedRequestParam(limit)) {
+        if (!isValidNewsFeedRequestNumericParam(limit)) {
             android.util.Log.e("Repro", "Didn't get NewsFeed: limit should be Number and more than 0.");
             return true;
         }
 
         final Object offsetId = args.opt(1);
-        if (!isValidNewsFeedRequestParam(offsetId)) {
+        if (!isValidNewsFeedRequestNumericParam(offsetId)) {
             android.util.Log.e("Repro", "Didn't get NewsFeed: offset id should be Number and more than 0.");
             return true;
         }
@@ -679,7 +688,85 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         return true;
     }
 
-    private boolean isValidNewsFeedRequestParam(Object param) {
+    private boolean getNewsFeedsWithLimitAndCampaignType(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final Object limit = args.opt(0);
+        if (!isValidNewsFeedRequestNumericParam(limit)) {
+            android.util.Log.e("Repro", "Cannot get NewsFeed: limit should be Number and more than 0.");
+            return true;
+        }
+
+        final NewsFeedCampaignType mappedCampaignType = mapToCampaignTypes(args.optString(1));
+        cordova.getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                JSONArray arr = new JSONArray();
+                try {
+                    List<NewsFeedEntry> newsFeedEntries = Repro.getNewsFeeds(((Number) limit).intValue(), mappedCampaignType);
+                    for (NewsFeedEntry newsFeedEntry : newsFeedEntries) {
+                        arr.put(newsFeedEntryToJSONObject(newsFeedEntry));
+                    }
+                    callbackContext.success(arr);
+                } catch (Exception e) {
+                    callbackContext.error("Failed to get NewsFeeds: " + e.getMessage());
+                }
+            }
+        });
+
+        return true;
+    }
+
+    private boolean getNewsFeedsWithLimitAndOffsetIdAndCampaignType(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final Object limit = args.opt(0);
+        if (!isValidNewsFeedRequestNumericParam(limit)) {
+            android.util.Log.e("Repro", "Cannot get NewsFeed: limit should be Number and more than 0.");
+            return true;
+        }
+
+        final Object offsetId = args.opt(1);
+        if (!isValidNewsFeedRequestNumericParam(offsetId)) {
+            android.util.Log.e("Repro", "Cannot get NewsFeed: offset id should be Number and more than 0.");
+            return true;
+        }
+
+        final NewsFeedCampaignType mappedCampaignType = mapToCampaignTypes(args.optString(2));
+        cordova.getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                JSONArray arr = new JSONArray();
+                try {
+                    List<NewsFeedEntry> newsFeedEntries = Repro.getNewsFeeds(((Number) limit).intValue(), ((Number) offsetId).intValue(), mappedCampaignType);
+                    for (NewsFeedEntry newsFeedEntry : newsFeedEntries) {
+                        arr.put(newsFeedEntryToJSONObject(newsFeedEntry));
+                    }
+                    callbackContext.success(arr);
+                } catch (Exception e) {
+                    callbackContext.error("Failed to get NewsFeeds: " + e.getMessage());
+                }
+            }
+        });
+
+        return true;
+    }
+
+    private NewsFeedCampaignType mapToCampaignTypes(final String campaignType) {
+        if (campaignType == null) {
+            return NewsFeedCampaignType.Unknown;
+        }
+
+        if (campaignType.equals(NewsFeedCampaignType.PushNotification.getValue())) {
+            return NewsFeedCampaignType.PushNotification;
+        } else if (campaignType.equals(NewsFeedCampaignType.InAppMessage.getValue())) {
+            return NewsFeedCampaignType.InAppMessage;
+        } else if (campaignType.equals(NewsFeedCampaignType.WebMessage.getValue())) {
+            return NewsFeedCampaignType.WebMessage;
+        }  else if (campaignType.equals(NewsFeedCampaignType.All.getValue())) {
+            return NewsFeedCampaignType.All;
+        } else {
+            return NewsFeedCampaignType.Unknown;
+        }
+    }
+
+    private boolean isValidNewsFeedRequestNumericParam(Object param) {
         return param instanceof Number && ((Number) param).intValue() > 0;
     }
 
@@ -696,6 +783,7 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         entryObject.put("link_url", linkUrl);
         entryObject.put("image_url", imageUrl);
         entryObject.put("delivered_at", sDateFormat.format(entry.deliveredAt));
+        entryObject.put("campaign_type", entry.campaignType.getValue());
         entryObject.put("shown", entry.shown);
         entryObject.put("read", entry.read);
 

@@ -26,18 +26,5 @@ buildscript {
 
     dependencies {
         classpath 'com.android.tools.build:gradle:+'
-        classpath 'com.google.gms:google-services:4.0.2'
     }
 }
-
-cdvPluginPostBuildExtras.add({
-    def skipGoogleServicesPluginApply = false
-    project.rootDir.eachDir { dir ->
-        if (dir.getName() == "cordova-support-google-services" || dir.getName() == "phonegap-plugin-push") {
-            skipGoogleServicesPluginApply = true
-        }
-    }
-    if(!skipGoogleServicesPluginApply && project.plugins.findPlugin("com.google.gms.google-services") == null) {
-        apply plugin: com.google.gms.googleservices.GoogleServicesPlugin
-    }
-})

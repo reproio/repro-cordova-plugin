@@ -1,11 +1,14 @@
 package io.repro.cordova;
 
+import android.app.AppOpsManager;
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.view.Display;
 import android.view.WindowManager;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.EnumSet;
 import java.util.Date;
@@ -20,6 +23,8 @@ import java.util.TimeZone;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaArgs;
 
+import org.apache.cordova.CordovaWebView;
+import org.apache.cordova.LOG;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,6 +39,8 @@ import io.repro.android.newsfeed.NewsFeedCampaignType;
  * Copyright (c) 2016 Repro Inc. All rights reserved.
  */
 public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
+
+    private static final String REPRO_CORDOVA_BRIDGE_VERSION = "6.9.0";
 
     private static SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
 
@@ -152,6 +159,28 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         return false;
     }
 
+    private void passPlatformValues() {
+        final Map<String, Object> platformValues = new HashMap<>();
+        platformValues.put("sub_sdk_platform", "cordova");
+        platformValues.put("sub_sdk_bridge_version",  REPRO_CORDOVA_BRIDGE_VERSION);
+
+        try {
+            Class cordovaKlass = Class.forName("org.apache.cordova.CordovaWebView");
+            Field verField = cordovaKlass.getDeclaredField("CORDOVA_VERSION");
+            platformValues.put("sub_sdk_platform_version", (String)verField.get(null)); // null because static field
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+
+        try {
+            Method method = Repro.class.getDeclaredMethod("_passRuntimeValues", Map.class);
+            method.setAccessible(true);
+            method.invoke(null, platformValues);
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+    }
+
     // API implementation
     // CordovaArgs: https://github.com/apache/cordova-android/blob/master/framework/src/org/apache/cordova/CordovaArgs.java
 
@@ -160,6 +189,7 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
 
         callAPI(new API(callbackContext) {
             Void api() {
+                passPlatformValues();
                 CordovaBridge.startSession(token);
                 return null;
             }

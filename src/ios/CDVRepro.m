@@ -13,12 +13,38 @@
 #import "CDVRepro.h"
 #import "CDVReproEventPropertiesFactory.h"
 
+
+#if __has_include(<Cordova/CDVAvailability.h>)
+#import <Cordova/CDVAvailability.h>
+#elif __has_include("CDVAvailability.h")
+#import "CDVAvailability.h"
+#elif __has_include("Cordova/CDVAvailability.h")
+#import "Cordova/CDVAvailability.h"
+#endif
+
+
 #define isNSNumber(OBJECT)           ([OBJECT isKindOfClass:NSNumber.class])
+
+
+@interface Repro (NonPublicApi)
++ (void)_passRuntimeValues:(nonnull NSDictionary<NSString *, NSString *> *)values;
+@end
+
 
 @implementation CDVRepro
 
 - (void)setup:(CDVInvokedUrlCommand*)command
 {
+    if ([Repro respondsToSelector:@selector(_passRuntimeValues:)]) {
+         [Repro _passRuntimeValues:@{
+             @"sub_sdk_platform":            @"cordova",
+#ifdef CDV_VERSION
+             @"sub_sdk_platform_version":    CDV_VERSION,
+#endif
+             @"sub_sdk_bridge_version":      [NSString stringWithUTF8String:REPRO_CORDOVA_BRIDGE_VERSION],
+         }];
+    }
+
     NSString *key = [command.arguments objectAtIndex:0];
     [Repro setup:key];
 }

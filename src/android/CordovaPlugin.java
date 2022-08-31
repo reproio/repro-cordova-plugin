@@ -6,6 +6,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.view.Display;
 import android.view.WindowManager;
+import android.net.Uri;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -25,6 +26,7 @@ import org.apache.cordova.CordovaArgs;
 
 import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.LOG;
+import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,7 +42,7 @@ import io.repro.android.newsfeed.NewsFeedCampaignType;
  */
 public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
 
-    private static final String REPRO_CORDOVA_BRIDGE_VERSION = "6.9.0";
+    private static final String REPRO_CORDOVA_BRIDGE_VERSION = "6.10.0";
 
     private static SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
 
@@ -154,6 +156,9 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         }
         else if ("updateNewsFeeds".equals(action)) {
             return updateNewsFeeds(args, callbackContext);
+        }
+        else if ("setOpenUrlCallback".equals(action)) {
+            return setOpenUrlCallback(args, callbackContext);
         }
 
         return false;
@@ -851,6 +856,18 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
             }
         });
 
+        return true;
+    }
+
+    private boolean setOpenUrlCallback(final CordovaArgs args, final CallbackContext callbackContext) {
+        Repro.setOpenUrlCallback(new Repro.OpenUrlCallback() {
+            @Override
+            public void onOpened(Uri uri) {
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, uri.toString());
+                pluginResult.setKeepCallback(true);
+                callbackContext.sendPluginResult(pluginResult);
+            }
+        });
         return true;
     }
 

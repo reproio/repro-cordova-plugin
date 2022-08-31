@@ -611,6 +611,15 @@ static NSDictionary* convertNSStringJSONToNSDictionary(NSString* json) {
   }];
 }
 
+- (void)setOpenUrlCallback:(CDVInvokedUrlCommand*)command
+{
+  [Repro setOpenUrlCallback:^void(NSURL *url) {
+    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[url absoluteString]];
+    [pluginResult setKeepCallbackAsBool:YES];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+  }];
+}
+
 - (NSString *)convertCampaignTypeToString:(RPRCampaignType)campaignType
 {
     switch (campaignType) {

@@ -146,6 +146,10 @@ Repro.prototype.updateNewsFeeds = function (newsFeeds, successCallback, errorCal
     exec(successCallback, errorCallback, "Repro", "updateNewsFeeds", [newsFeeds]);
 };
 
+Repro.prototype.setOpenUrlCallback = function(successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "setOpenUrlCallback", []);
+};
+
 Repro.prototype.CampaignType = Object.freeze(
     {
         InAppMessage: "in_app_message",

@@ -15,16 +15,5 @@ android {
 }
 
 dependencies {
-    compile(name:'repro-android-sdk', ext:'aar')
-}
-
-buildscript {
-    repositories {
-        mavenCentral()
-        google()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:+'
-    }
+    api(name:'repro-android-sdk', ext:'aar')
 }

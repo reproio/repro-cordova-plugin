@@ -42,7 +42,7 @@ import io.repro.android.newsfeed.NewsFeedCampaignType;
  */
 public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
 
-    private static final String REPRO_CORDOVA_BRIDGE_VERSION = "6.10.4";
+    private static final String REPRO_CORDOVA_BRIDGE_VERSION = "6.11.0";
 
     private static SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
 

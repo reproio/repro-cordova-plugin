@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 
-<plugin xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-repro" version="6.10.4" xmlns="http://apache.org/cordova/ns/plugins/1.0">
+<plugin xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-repro" version="6.11.0" xmlns="http://apache.org/cordova/ns/plugins/1.0">
     <name>Repro</name>
     <description>Repro Cordova Plugin</description>
     <license>Commercial</license>

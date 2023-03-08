@@ -1,5 +1,5 @@
 {
-    "ios-sdk": "5.9.4",
-    "android-sdk": "5.7.2",
-    "bridge": "6.10.4"
+    "ios-sdk": "5.9.5",
+    "android-sdk": "5.8.0",
+    "bridge": "6.11.0"
 }

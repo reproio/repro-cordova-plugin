@@ -9,6 +9,7 @@
 
 #import "Repro/Repro.h"
 #import "Repro/RPRNewsFeedEntry.h"
+#import "Repro/RPRUserProfileTypes.h"
 
 #import "CDVRepro.h"
 #import "CDVReproEventPropertiesFactory.h"
@@ -105,6 +106,38 @@
 
   NSDate* date = [NSDate dateWithTimeIntervalSince1970:(value.longValue) / 1000.0];
   [Repro setDateUserProfile:date forKey:key];
+}
+
+- (void)setUserGender:(CDVInvokedUrlCommand*)command
+{
+  NSNumber* index = [command.arguments objectAtIndex:0];
+  [Repro setUserGender:(RPRUserProfileGender)index.intValue];
+}
+
+
+- (void)setUserEmailAddress:(CDVInvokedUrlCommand*)command
+{
+  NSString* email = [command.arguments objectAtIndex:0];
+  [Repro setUserEmailAddress:email];
+}
+
+- (void)setUserResidencePrefecture:(CDVInvokedUrlCommand*)command
+{
+  NSNumber* value = [command.arguments objectAtIndex:0];
+  [Repro setUserResidencePrefecture:(RPRUserProfilePrefecture)value.intValue];
+}
+
+- (void)setUserDateOfBirth:(CDVInvokedUrlCommand*)command
+{
+  NSNumber* value = [command.arguments objectAtIndex:0];
+  NSDate* date = [NSDate dateWithTimeIntervalSince1970:(value.longValue) / 1000.0];
+  [Repro setUserDateOfBirth:date];
+}
+
+- (void)setUserAge:(CDVInvokedUrlCommand*)command
+{
+  NSNumber* value = [command.arguments objectAtIndex:0];
+  [Repro setUserAge:value.intValue];
 }
 
 - (void)track:(CDVInvokedUrlCommand*)command

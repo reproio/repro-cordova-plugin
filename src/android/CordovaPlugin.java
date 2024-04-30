@@ -35,6 +35,8 @@ import io.repro.android.Repro;
 import io.repro.android.CordovaBridge;
 import io.repro.android.newsfeed.NewsFeedEntry;
 import io.repro.android.newsfeed.NewsFeedCampaignType;
+import io.repro.android.user.UserProfileGender;
+import io.repro.android.user.UserProfilePrefecture;
 
 /**
  * Created by nekoe on 1/15/16.
@@ -42,7 +44,7 @@ import io.repro.android.newsfeed.NewsFeedCampaignType;
  */
 public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
 
-    private static final String REPRO_CORDOVA_BRIDGE_VERSION = "6.16.0";
+    private static final String REPRO_CORDOVA_BRIDGE_VERSION = "6.17.0";
 
     private static SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
 
@@ -77,6 +79,21 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         }
         else if ("setDateUserProfile".equals(action)) {
             return setDateUserProfile(args, callbackContext);
+        }
+        else if ("setUserGender".equals(action)) {
+            return setUserGender(args, callbackContext);
+        }
+        else if ("setUserEmailAddress".equals(action)) {
+            return setUserEmailAddress(args, callbackContext);
+        }
+        else if ("setUserResidencePrefecture".equals(action)) {
+            return setUserResidencePrefecture(args, callbackContext);
+        }
+        else if ("setUserDateOfBirth".equals(action)) {
+            return setUserDateOfBirth(args, callbackContext);
+        }
+        else if ("setUserAge".equals(action)) {
+            return setUserAge(args, callbackContext);
         }
         else if ("track".equals(action)) {
             return track(args, callbackContext);
@@ -306,6 +323,74 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
 
         return true;
     }
+
+    private boolean setUserGender(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final int gender = args.getInt(0);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.setUserGender(UserProfileGender.values()[gender]);
+                return null;
+            }
+        });
+
+        return true;
+    }
+    
+    private boolean setUserEmailAddress(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final String email = args.getString(0);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.setUserEmailAddress(email);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean setUserResidencePrefecture(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final int prefecture = args.getInt(0);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.setUserResidencePrefecture(UserProfilePrefecture.values()[prefecture - 1]);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean setUserDateOfBirth(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final long value = args.getLong(0);
+        final Date date = new Date(value);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.setUserDateOfBirth(date);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    
+    private boolean setUserAge(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final int age = args.getInt(0);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.setUserAge(age);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
 
     private boolean track(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
         final String name = args.getString(0);

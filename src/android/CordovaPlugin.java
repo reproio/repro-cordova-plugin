@@ -44,7 +44,7 @@ import io.repro.android.user.UserProfilePrefecture;
  */
 public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
 
-    private static final String REPRO_CORDOVA_BRIDGE_VERSION = "6.18.0";
+    private static final String REPRO_CORDOVA_BRIDGE_VERSION = "6.19.0";
 
     private static SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
 
@@ -901,7 +901,9 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         entryObject.put("summary", entry.summary);
         entryObject.put("body", entry.body);
         entryObject.put("link_url", linkUrl);
+        entryObject.put("link_url_string", entry.linkUrlString);
         entryObject.put("image_url", imageUrl);
+        entryObject.put("image_url_string", entry.imageUrlString);
         entryObject.put("delivered_at", sDateFormat.format(entry.deliveredAt));
         entryObject.put("campaign_type", entry.campaignType.getValue());
         entryObject.put("shown", entry.shown);

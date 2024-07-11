@@ -588,7 +588,9 @@ static NSDictionary* convertNSStringJSONToNSDictionary(NSString* json) {
     @"delivered_at": [[self dateFormatter] stringFromDate:entry.deliveredAt],
     @"campaign_type": [self convertCampaignTypeToString:entry.campaignType],
     @"link_url": entry.linkUrl ? [entry.linkUrl absoluteString] : @"",
-    @"image_url": entry.imageUrl ? [entry.imageUrl absoluteString] : @""
+    @"link_url_string": entry.linkUrlString,
+    @"image_url": entry.imageUrl ? [entry.imageUrl absoluteString] : @"",
+    @"image_url_string": entry.imageUrlString
   };
 
   return entryJson;

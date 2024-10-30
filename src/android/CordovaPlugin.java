@@ -35,6 +35,8 @@ import io.repro.android.Repro;
 import io.repro.android.CordovaBridge;
 import io.repro.android.newsfeed.NewsFeedEntry;
 import io.repro.android.newsfeed.NewsFeedCampaignType;
+import io.repro.android.remoteconfig.RemoteConfigListener;
+import io.repro.android.remoteconfig.RemoteConfigValue;
 import io.repro.android.user.UserProfileGender;
 import io.repro.android.user.UserProfilePrefecture;
 
@@ -44,7 +46,7 @@ import io.repro.android.user.UserProfilePrefecture;
  */
 public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
 
-    private static final String REPRO_CORDOVA_BRIDGE_VERSION = "6.20.0";
+    private static final String REPRO_CORDOVA_BRIDGE_VERSION = "6.21.0";
 
     private static SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
 
@@ -176,6 +178,33 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         }
         else if ("setOpenUrlCallback".equals(action)) {
             return setOpenUrlCallback(args, callbackContext);
+        }
+        else if ("remoteConfig_fetch".equals(action)) {
+            return remoteConfig_fetch(args, callbackContext);
+        }
+        else if ("remoteConfig_activateFetched".equals(action)) {
+            return remoteConfig_activateFetched(args, callbackContext);
+        }
+        else if ("remoteConfig_setDefaultsFromJson".equals(action)) {
+            return remoteConfig_setDefaultsFromJson(args, callbackContext);
+        }
+        else if ("remoteConfig_setDefaultsFromJsonString".equals(action)) {
+            return remoteConfig_setDefaultsFromJsonString(args, callbackContext);
+        }
+        else if ("remoteConfig_getAllValues".equals(action)) {
+            return remoteConfig_getAllValues(args, callbackContext);
+        }
+        else if ("remoteConfig_getAllValuesWithPrefix".equals(action)) {
+            return remoteConfig_getAllValuesWithPrefix(args, callbackContext);
+        }
+        else if ("remoteConfig_getValue".equals(action)) {
+            return remoteConfig_getValue(args, callbackContext);
+        }
+        else if ("remoteConfig_getLocalDefaultValue".equals(action)) {
+            return remoteConfig_getLocalDefaultValue(args, callbackContext);
+        }
+        else if ("remoteConfig_forceReset".equals(action)) {
+            return remoteConfig_forceReset(args, callbackContext);
         }
 
         return false;
@@ -958,6 +987,111 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         return true;
     }
 
+
+    private boolean remoteConfig_fetch(final CordovaArgs args, final CallbackContext callbackContext) {
+        int timeout = args.optInt(0); // fallback: 0
+        Repro.getRemoteConfig().fetch(timeout, new RemoteConfigListener() {
+            @Override
+            public void onCompletion(FetchStatus fetchStatus) {
+                if (fetchStatus == FetchStatus.TIMEOUT_REACHED) {
+                    callbackContext.error(fetchStatus.ordinal());
+                } else {
+                    callbackContext.success(fetchStatus.ordinal());
+                }
+            }
+        });
+        return true;
+    }
+
+    private boolean remoteConfig_activateFetched(final CordovaArgs args, final CallbackContext callbackContext) {
+        if (Repro.getRemoteConfig().activateFetched()) {
+            callbackContext.success();
+        } else {
+            callbackContext.error("Failed to do 'activateFetched'.");
+        }
+        return true;
+    }
+
+    private boolean remoteConfig_setDefaultsFromJson(final CordovaArgs args, final CallbackContext callbackContext) {
+        JSONObject defaults = args.optJSONObject(0);
+        if (Repro.getRemoteConfig().setDefaultsFromJsonString(defaults.toString())) {
+            callbackContext.success();
+        } else {
+            callbackContext.error("Failed to do 'setDefaultsFromJson'.");
+        }
+        return true;
+    }
+
+    private boolean remoteConfig_setDefaultsFromJsonString(final CordovaArgs args, final CallbackContext callbackContext) {
+        String jsonString = args.optString(0);
+        if (Repro.getRemoteConfig().setDefaultsFromJsonString(jsonString)) {
+            callbackContext.success();
+        } else {
+            callbackContext.error("Failed to do 'setDefaultsFromJsonString'.");
+        }
+        return true;
+    }
+
+    private boolean remoteConfig_getAllValues(final CordovaArgs args, final CallbackContext callbackContext) {
+        callAPI(new API<JSONObject>(callbackContext) {
+            @Override
+            JSONObject api() {
+                Map<String, RemoteConfigValue> values = Repro.getRemoteConfig().getAllValues();
+                return mapToJson(values);
+            }
+        });
+        return true;
+    }
+
+    private boolean remoteConfig_getAllValuesWithPrefix(final CordovaArgs args, final CallbackContext callbackContext) {
+        String prefix = args.optString(0);
+        callAPI(new API<JSONObject>(callbackContext) {
+            @Override
+            JSONObject api() {
+                Map<String, RemoteConfigValue> values = Repro.getRemoteConfig().getAllValuesWithPrefix(prefix);
+                return mapToJson(values);
+            }
+        });
+        return true;
+    }
+
+    private boolean remoteConfig_getValue(final CordovaArgs args, final CallbackContext callbackContext) {
+        Object key = args.opt(0);
+        if (!(key instanceof String)) {
+            callbackContext.error("A non-String value was specified for key.");
+            return true;
+        }
+
+        RemoteConfigValue value = Repro.getRemoteConfig().get((String)key);
+        String stringValue = value.asString();
+        callbackContext.success(stringValue);
+        return true;
+    }
+
+    private boolean remoteConfig_getLocalDefaultValue(final CordovaArgs args, final CallbackContext callbackContext) {
+        Object key = args.opt(0);
+        if (!(key instanceof String)) {
+            callbackContext.error("A non-String value was specified for key.");
+            return true;
+        }
+
+        RemoteConfigValue value = Repro.getRemoteConfig().getLocalDefaultValue((String)key);
+        String stringValue = value.asString();
+        callbackContext.success(stringValue);
+        return true;
+    }
+
+    private boolean remoteConfig_forceReset(final CordovaArgs args, final CallbackContext callbackContext) {
+        callAPI(new API<Void>(callbackContext) {
+            @Override
+            Void api() {
+                Repro.getRemoteConfig().forceReset();
+                return null;
+            }
+        });
+        return true;
+    }
+
     // helper
 
     private static abstract class API<T> implements Runnable {
@@ -971,7 +1105,7 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         public void run() {
             final T ret = api();
 
-            if (ret instanceof Void) {
+            if (ret == null) {
               mCallbackContext.success();
             } else if (ret instanceof String) {
               mCallbackContext.success((String)ret);
@@ -989,5 +1123,20 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
 
     private void callAPI(final API api) {
         cordova.getActivity().runOnUiThread(api);
+    }
+
+    private JSONObject mapToJson(final Map<String, RemoteConfigValue> map) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            for (String key : map.keySet()) {
+                RemoteConfigValue value = map.get(key);
+                if (value != null) {
+                    jsonObject.put(key, value.asString());
+                }
+            }
+            return jsonObject;
+        } catch (JSONException e) {
+            return null;
+        }
     }
 }

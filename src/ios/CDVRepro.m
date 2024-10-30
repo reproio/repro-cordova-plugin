@@ -10,6 +10,7 @@
 #import "Repro/Repro.h"
 #import "Repro/RPRNewsFeedEntry.h"
 #import "Repro/RPRUserProfileTypes.h"
+#import "Repro/RPRRemoteConfig.h"
 
 #import "CDVRepro.h"
 #import "CDVReproEventPropertiesFactory.h"
@@ -653,6 +654,122 @@ static NSDictionary* convertNSStringJSONToNSDictionary(NSString* json) {
     [pluginResult setKeepCallbackAsBool:YES];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
   }];
+}
+
+// RemoteConfig
+- (void)remoteConfig_fetch:(CDVInvokedUrlCommand*)command
+{
+    NSNumber *timeout = [command.arguments objectAtIndex:0];
+    double timeoutSecs = [timeout longLongValue] * 0.001;
+    [[Repro remoteConfig] fetchWithTimeout:timeoutSecs completionHandler:^(RPRRemoteConfigFetchStatus fetchStatus) {
+        CDVCommandStatus status = CDVCommandStatus_OK;
+        if (fetchStatus == RPRRemoteConfigFetchStatusTimeoutReached) {
+            status = CDVCommandStatus_ERROR;
+        }
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:status messageAsInt:(int)fetchStatus];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
+}
+
+- (void)remoteConfig_activateFetched:(CDVInvokedUrlCommand*)command
+{
+    if ([[Repro remoteConfig] activateFetched])
+    {
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"success"];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }
+    else {
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Failed to activateFetched"];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }
+}
+
+- (void)remoteConfig_setDefaultsFromJson:(CDVInvokedUrlCommand*)command
+{
+    NSDictionary *dict = [command.arguments objectAtIndex:0];
+    if ([[Repro remoteConfig] setDefaultsFromDictionary: dict])
+    {
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"success"];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }
+    else {
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Failed to setDefaultsFromJson"];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }
+}
+
+- (void)remoteConfig_setDefaultsFromJsonString:(CDVInvokedUrlCommand*)command
+{
+    NSString *string = [command.arguments objectAtIndex:0];
+    if (string && [string isKindOfClass:NSString.class] && [[Repro remoteConfig] setDefaultsFromJsonString: string])
+    {
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"success"];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }
+    else {
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Failed to setDefaultsFromJsonString"];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }
+}
+
+- (void)remoteConfig_getAllValues:(CDVInvokedUrlCommand*)command
+{
+    NSDictionary<NSString *, RPRRemoteConfigValue *> *values = [[Repro remoteConfig] allValues];
+
+    NSMutableDictionary<NSString *, NSString *> *dict = [[NSMutableDictionary alloc] init];
+    for (id key in values) {
+        [dict setObject:values[key].stringValue forKey:key];
+    }
+
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dict];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)remoteConfig_getAllValuesWithPrefix:(CDVInvokedUrlCommand*)command
+{
+    NSString *prefix = [command.arguments objectAtIndex:0];
+    NSDictionary<NSString *, RPRRemoteConfigValue *> *values = [[Repro remoteConfig] allValuesWithPrefix: prefix];
+
+    NSMutableDictionary<NSString *, NSString *> *dict = [[NSMutableDictionary alloc] init];
+    for (id key in values) {
+        [dict setObject:values[key].stringValue forKey:key];
+    }
+
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dict];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)remoteConfig_getValue:(CDVInvokedUrlCommand*)command
+{
+    NSString *key = [command.arguments objectAtIndex:0];
+    if (!key || ![key isKindOfClass:NSString.class]) {
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"A non-String value was specified for key."];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    } else {
+        RPRRemoteConfigValue *value = [[Repro remoteConfig] valueForKey: key];
+
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:value.stringValue];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }
+}
+
+- (void)remoteConfig_getLocalDefaultValue:(CDVInvokedUrlCommand*)command
+{
+    NSString *key = [command.arguments objectAtIndex:0];
+    if (!key || ![key isKindOfClass:NSString.class]) {
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"A non-String value was specified for key."];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    } else {
+        RPRRemoteConfigValue *value = [[Repro remoteConfig] localDefaultValueForKey: key];
+
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:value.stringValue];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }
+}
+
+- (void)remoteConfig_forceReset:(CDVInvokedUrlCommand*)command
+{
+    [[Repro remoteConfig] forceReset];
 }
 
 - (NSString *)convertCampaignTypeToString:(RPRCampaignType)campaignType

@@ -197,6 +197,43 @@ Repro.prototype.UserProfilePrefecture = Object.freeze (
     }
 )
 
+Repro.prototype.remoteConfig = {
+    fetch: function(timeout, successCallback, errorCallback) {
+        exec(successCallback, errorCallback, "Repro", "remoteConfig_fetch", [timeout]);
+    },
+    activateFetched: function(successCallback, errorCallback) {
+        exec(successCallback, errorCallback, "Repro", "remoteConfig_activateFetched", []);
+    },
+    setDefaultsFromJson: function(dict, successCallback, errorCallback) {
+        exec(successCallback, errorCallback, "Repro", "remoteConfig_setDefaultsFromJson", [dict]);
+    },
+    setDefaultsFromJsonString: function(json, successCallback, errorCallback) {
+        exec(successCallback, errorCallback, "Repro", "remoteConfig_setDefaultsFromJsonString", [json]);
+    },
+    getAllValues: function(successCallback, errorCallback) {
+        exec(successCallback, errorCallback, "Repro", "remoteConfig_getAllValues", []);
+    },
+    getAllValuesWithPrefix: function(prefix, successCallback, errorCallback) {
+        exec(successCallback, errorCallback, "Repro", "remoteConfig_getAllValuesWithPrefix", [prefix]);
+    },
+    getValue: function(key, successCallback, errorCallback) {
+        exec(successCallback, errorCallback, "Repro", "remoteConfig_getValue", [key]);
+    },
+    getLocalDefaultValue: function(key, successCallback, errorCallback) {
+        exec(successCallback, errorCallback, "Repro", "remoteConfig_getLocalDefaultValue", [key]);
+    },
+    forceReset: function(successCallback, errorCallback) {
+        exec(successCallback, errorCallback, "Repro", "remoteConfig_forceReset", []);
+    }
+}
+
+Repro.prototype.remoteConfig.FetchStatus = Object.freeze (
+    {
+        Success: 0,
+        TimeoutReached: 1,
+        AlreadyFetched: 2,
+    }
+)
 
 
 module.exports = new Repro();

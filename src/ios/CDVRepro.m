@@ -409,6 +409,30 @@ static NSDictionary* convertNSStringJSONToNSDictionary(NSString* json) {
   [Repro setSilverEggProdKey:prodKey];
 }
 
+- (void)linkLineID:(CDVInvokedUrlCommand*)command
+{
+  id lineUserId = [command.arguments objectAtIndex:0];
+  id lineChannelId = [command.arguments objectAtIndex:1];
+  if (![lineUserId isKindOfClass:NSString.class] || ![lineChannelId isKindOfClass:NSString.class]) {
+    NSLog(@"ERROR: Repro Didn't link LINE ID: LINE user ID and LINE channel ID are required, and should be String. null or undefined is not allowed.");
+    return;
+  }
+
+  [Repro linkLineID:lineUserId lineChannelID:lineChannelId];
+}
+
+- (void)unlinkLineID:(CDVInvokedUrlCommand*)command
+{
+  id lineUserId = [command.arguments objectAtIndex:0];
+  id lineChannelId = [command.arguments objectAtIndex:1];
+  if (![lineUserId isKindOfClass:NSString.class] || ![lineChannelId isKindOfClass:NSString.class]) {
+    NSLog(@"ERROR: Repro Didn't unlink LINE ID: LINE user ID and LINE channel ID are required, and should be String. null or undefined is not allowed.");
+    return;
+  }
+
+  [Repro unlinkLineID:lineUserId lineChannelID:lineChannelId];
+}
+
 - (void)getNewsFeedsWithLimit:(CDVInvokedUrlCommand*)command
 {
   NSNumber* limit = [command.arguments objectAtIndex:0];

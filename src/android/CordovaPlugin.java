@@ -46,7 +46,7 @@ import io.repro.android.user.UserProfilePrefecture;
  */
 public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
 
-    private static final String REPRO_CORDOVA_BRIDGE_VERSION = "6.22.0";
+    private static final String REPRO_CORDOVA_BRIDGE_VERSION = "6.23.0";
 
     private static SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
 
@@ -160,6 +160,12 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         }
         else if ("setSilverEggProdKey".equals(action)) {
             return setSilverEggProdKey(args, callbackContext);
+        }
+        else if ("linkLineID".equals(action)) {
+            return linkLineID(args, callbackContext);
+        }
+        else if ("unlinkLineID".equals(action)) {
+            return unlinkLineID(args, callbackContext);
         }
         else if ("getNewsFeedsWithLimit".equals(action)) {
             return getNewsFeedsWithLimit(args, callbackContext);
@@ -772,6 +778,42 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         callAPI(new API(callbackContext) {
             Void api() {
                 Repro.setSilverEggProdKey((String)prodKey);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean linkLineID(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final Object lineUserId = args.opt(0);
+        final Object lineChannelId = args.opt(1);
+        if (!(lineUserId instanceof String) || !(lineChannelId instanceof String)) {
+            android.util.Log.e("Repro", "Didn't link LINE ID: LINE user ID and LINE channel ID are required, and should be String. null or undefined is not allowed.");
+            return true;
+        }
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.linkLineID((String)lineUserId, (String)lineChannelId);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean unlinkLineID(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final Object lineUserId = args.opt(0);
+        final Object lineChannelId = args.opt(1);
+        if (!(lineUserId instanceof String) || !(lineChannelId instanceof String)) {
+            android.util.Log.e("Repro", "Didn't unlink LINE ID: LINE user ID and LINE channel ID are required, and should be String. null or undefined is not allowed.");
+            return true;
+        }
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.unlinkLineID((String)lineUserId, (String)lineChannelId);
                 return null;
             }
         });

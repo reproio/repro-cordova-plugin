@@ -146,6 +146,14 @@ Repro.prototype.setSilverEggProdKey = function (prodKey, successCallback, errorC
     exec(successCallback, errorCallback, "Repro", "setSilverEggProdKey", [prodKey]);
 };
 
+Repro.prototype.linkLineID = function (lineUserId, lineChannelId, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "linkLineID", [lineUserId, lineChannelId]);
+};
+
+Repro.prototype.unlinkLineID = function (lineUserId, lineChannelId, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "unlinkLineID", [lineUserId, lineChannelId]);
+};
+
 Repro.prototype.getNewsFeedsWithLimit = function (limit, successCallback, errorCallback) {
     exec(successCallback, errorCallback, "Repro", "getNewsFeedsWithLimit", [limit]);
 };

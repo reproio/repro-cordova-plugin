@@ -54,6 +54,90 @@ Repro.prototype.setUserAge = function (age, successCallback, errorCallback) {
     exec(successCallback, errorCallback, "Repro", "setUserAge", [age]);
 };
 
+Repro.prototype.onlySetIfAbsentStringUserProfile = function (key, value, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "onlySetIfAbsentStringUserProfile", [key, value]);
+};
+
+Repro.prototype.onlySetIfAbsentIntUserProfile = function (key, value, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "onlySetIfAbsentIntUserProfile", [key, value]);
+};
+
+Repro.prototype.onlySetIfAbsentDoubleUserProfile = function (key, value, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "onlySetIfAbsentDoubleUserProfile", [key, value]);
+};
+
+Repro.prototype.onlySetIfAbsentDateUserProfile = function (key, value, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "onlySetIfAbsentDateUserProfile", [key, value.getTime()]);
+};
+
+Repro.prototype.incrementIntUserProfileBy = function (key, value, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "incrementIntUserProfileBy", [key, value]);
+};
+
+Repro.prototype.decrementIntUserProfileBy = function (key, value, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "decrementIntUserProfileBy", [key, value]);
+};
+
+Repro.prototype.incrementDoubleUserProfileBy = function (key, value, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "incrementDoubleUserProfileBy", [key, value]);
+};
+
+Repro.prototype.decrementDoubleUserProfileBy = function (key, value, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "decrementDoubleUserProfileBy", [key, value]);
+};
+
+Repro.prototype.onlySetIfAbsentUserGender = function (gender, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "onlySetIfAbsentUserGender", [gender]);
+};
+
+Repro.prototype.onlySetIfAbsentUserEmailAddress = function (email, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "onlySetIfAbsentUserEmailAddress", [email]);
+};
+
+Repro.prototype.onlySetIfAbsentUserResidencePrefecture = function (prefecture, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "onlySetIfAbsentUserResidencePrefecture", [prefecture]);
+};
+
+Repro.prototype.onlySetIfAbsentUserDateOfBirth = function (date, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "onlySetIfAbsentUserDateOfBirth", [date.getTime()]);
+};
+
+Repro.prototype.onlySetIfAbsentUserAge = function (age, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "onlySetIfAbsentUserAge", [age]);
+};
+
+Repro.prototype.incrementUserAgeBy = function (value, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "incrementUserAgeBy", [value]);
+};
+
+Repro.prototype.decrementUserAgeBy = function (value, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "decrementUserAgeBy", [value]);
+};
+
+Repro.prototype.deleteUserProfile = function (key, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "deleteUserProfile", [key]);
+};
+
+Repro.prototype.deleteUserGender = function (successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "deleteUserGender", []);
+};
+
+Repro.prototype.deleteUserEmailAddress = function (successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "deleteUserEmailAddress", []);
+};
+
+Repro.prototype.deleteUserResidencePrefecture = function (successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "deleteUserResidencePrefecture", []);
+};
+
+Repro.prototype.deleteUserDateOfBirth = function (successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "deleteUserDateOfBirth", []);
+};
+
+Repro.prototype.deleteUserAge = function (successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "deleteUserAge", []);
+};
+
 Repro.prototype.track = function (eventName, successCallback, errorCallback) {
     exec(successCallback, errorCallback, "Repro", "track", [eventName]);
 };

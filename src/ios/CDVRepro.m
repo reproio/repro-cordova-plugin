@@ -141,6 +141,137 @@
   [Repro setUserAge:value.intValue];
 }
 
+- (void)onlySetIfAbsentStringUserProfile:(CDVInvokedUrlCommand*)command
+{
+  NSString* key = [command.arguments objectAtIndex:0];
+  NSString* value = [command.arguments objectAtIndex:1];
+  [Repro onlySetIfAbsentStringUserProfile:value forKey:key];
+}
+
+- (void)onlySetIfAbsentIntUserProfile:(CDVInvokedUrlCommand*)command
+{
+  NSString* key = [command.arguments objectAtIndex:0];
+  NSNumber* value = [command.arguments objectAtIndex:1];
+  [Repro onlySetIfAbsentIntUserProfile:value.intValue forKey:key];
+}
+
+- (void)onlySetIfAbsentDoubleUserProfile:(CDVInvokedUrlCommand*)command
+{
+  NSString* key = [command.arguments objectAtIndex:0];
+  NSNumber* value = [command.arguments objectAtIndex:1];
+  [Repro onlySetIfAbsentDoubleUserProfile:value.doubleValue forKey:key];
+}
+
+- (void)onlySetIfAbsentDateUserProfile:(CDVInvokedUrlCommand*)command
+{
+  NSString* key = [command.arguments objectAtIndex:0];
+  NSNumber* timestamp = [command.arguments objectAtIndex:1];
+  NSDate* date = [NSDate dateWithTimeIntervalSince1970:(timestamp.longValue) / 1000.0];
+  [Repro onlySetIfAbsentDateUserProfile:date forKey:key];
+}
+
+- (void)incrementIntUserProfileBy:(CDVInvokedUrlCommand*)command
+{
+  NSString* key = [command.arguments objectAtIndex:0];
+  NSNumber* value = [command.arguments objectAtIndex:1];
+  [Repro incrementIntUserProfileBy:value.intValue forKey:key];
+}
+
+- (void)decrementIntUserProfileBy:(CDVInvokedUrlCommand*)command
+{
+  NSString* key = [command.arguments objectAtIndex:0];
+  NSNumber* value = [command.arguments objectAtIndex:1];
+  [Repro decrementIntUserProfileBy:value.intValue forKey:key];
+}
+
+- (void)incrementDoubleUserProfileBy:(CDVInvokedUrlCommand*)command
+{
+  NSString* key = [command.arguments objectAtIndex:0];
+  NSNumber* value = [command.arguments objectAtIndex:1];
+  [Repro incrementDoubleUserProfileBy:value.doubleValue forKey:key];
+}
+
+- (void)decrementDoubleUserProfileBy:(CDVInvokedUrlCommand*)command
+{
+  NSString* key = [command.arguments objectAtIndex:0];
+  NSNumber* value = [command.arguments objectAtIndex:1];
+  [Repro decrementDoubleUserProfileBy:value.doubleValue forKey:key];
+}
+
+- (void)onlySetIfAbsentUserGender:(CDVInvokedUrlCommand*)command
+{
+  NSNumber* gender = [command.arguments objectAtIndex:0];
+  [Repro onlySetIfAbsentUserGender:(RPRUserProfileGender)gender.intValue];
+}
+
+- (void)onlySetIfAbsentUserEmailAddress:(CDVInvokedUrlCommand*)command
+{
+  NSString* email = [command.arguments objectAtIndex:0];
+  [Repro onlySetIfAbsentUserEmailAddress:email];
+}
+
+- (void)onlySetIfAbsentUserResidencePrefecture:(CDVInvokedUrlCommand*)command
+{
+  NSNumber* prefecture = [command.arguments objectAtIndex:0];
+  [Repro onlySetIfAbsentUserResidencePrefecture:(RPRUserProfilePrefecture)prefecture.intValue];
+}
+
+- (void)onlySetIfAbsentUserDateOfBirth:(CDVInvokedUrlCommand*)command
+{
+  NSNumber* value = [command.arguments objectAtIndex:0];
+  NSDate* date = [NSDate dateWithTimeIntervalSince1970:(value.longValue) / 1000.0];
+  [Repro onlySetIfAbsentUserDateOfBirth:date];
+}
+
+- (void)onlySetIfAbsentUserAge:(CDVInvokedUrlCommand*)command
+{
+  NSNumber* age = [command.arguments objectAtIndex:0];
+  [Repro onlySetIfAbsentUserAge:age.intValue];
+}
+
+- (void)incrementUserAgeBy:(CDVInvokedUrlCommand*)command
+{
+  NSNumber* value = [command.arguments objectAtIndex:0];
+  [Repro incrementUserAgeBy:value.intValue];
+}
+
+- (void)decrementUserAgeBy:(CDVInvokedUrlCommand*)command
+{
+  NSNumber* value = [command.arguments objectAtIndex:0];
+  [Repro decrementUserAgeBy:value.intValue];
+}
+
+- (void)deleteUserProfile:(CDVInvokedUrlCommand*)command
+{
+  NSString* key = [command.arguments objectAtIndex:0];
+  [Repro deleteUserProfile:key];
+}
+
+- (void)deleteUserGender:(CDVInvokedUrlCommand*)command
+{
+  [Repro deleteUserGender];
+}
+
+- (void)deleteUserEmailAddress:(CDVInvokedUrlCommand*)command
+{
+  [Repro deleteUserEmailAddress];
+}
+
+- (void)deleteUserResidencePrefecture:(CDVInvokedUrlCommand*)command
+{
+  [Repro deleteUserResidencePrefecture];
+}
+
+- (void)deleteUserDateOfBirth:(CDVInvokedUrlCommand*)command
+{
+  [Repro deleteUserDateOfBirth];
+}
+
+- (void)deleteUserAge:(CDVInvokedUrlCommand*)command
+{
+  [Repro deleteUserAge];
+}
+
 - (void)track:(CDVInvokedUrlCommand*)command
 {
     NSString *eventName = [command.arguments objectAtIndex:0];

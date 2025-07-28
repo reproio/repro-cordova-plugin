@@ -46,7 +46,376 @@ import io.repro.android.user.UserProfilePrefecture;
  */
 public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
 
-    private static final String REPRO_CORDOVA_BRIDGE_VERSION = "6.23.0";
+    private static final String REPRO_CORDOVA_BRIDGE_VERSION = "6.24.0";
+
+    private interface CordovaReproCommand {
+        boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException;
+    }
+
+    private static final Map<String, CordovaReproCommand> COMMAND_MAP = new HashMap<>();
+
+    static {
+        COMMAND_MAP.put("setup", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.setup(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("optIn", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.optIn(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("setLogLevel", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.setLogLevel(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("setUserID", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.setUserID(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("setStringUserProfile", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.setStringUserProfile(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("setIntUserProfile", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.setIntUserProfile(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("setDoubleUserProfile", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.setDoubleUserProfile(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("setDateUserProfile", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.setDateUserProfile(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("setUserGender", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.setUserGender(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("setUserEmailAddress", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.setUserEmailAddress(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("setUserResidencePrefecture", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.setUserResidencePrefecture(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("setUserDateOfBirth", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.setUserDateOfBirth(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("setUserAge", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.setUserAge(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("onlySetIfAbsentStringUserProfile", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.onlySetIfAbsentStringUserProfile(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("onlySetIfAbsentIntUserProfile", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.onlySetIfAbsentIntUserProfile(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("onlySetIfAbsentDoubleUserProfile", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.onlySetIfAbsentDoubleUserProfile(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("onlySetIfAbsentDateUserProfile", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.onlySetIfAbsentDateUserProfile(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("incrementIntUserProfileBy", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.incrementIntUserProfileBy(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("decrementIntUserProfileBy", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.decrementIntUserProfileBy(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("incrementDoubleUserProfileBy", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.incrementDoubleUserProfileBy(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("decrementDoubleUserProfileBy", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.decrementDoubleUserProfileBy(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("onlySetIfAbsentUserGender", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.onlySetIfAbsentUserGender(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("onlySetIfAbsentUserEmailAddress", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.onlySetIfAbsentUserEmailAddress(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("onlySetIfAbsentUserResidencePrefecture", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.onlySetIfAbsentUserResidencePrefecture(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("onlySetIfAbsentUserDateOfBirth", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.onlySetIfAbsentUserDateOfBirth(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("onlySetIfAbsentUserAge", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.onlySetIfAbsentUserAge(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("incrementUserAgeBy", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.incrementUserAgeBy(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("decrementUserAgeBy", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.decrementUserAgeBy(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("deleteUserProfile", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.deleteUserProfile(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("deleteUserGender", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.deleteUserGender(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("deleteUserEmailAddress", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.deleteUserEmailAddress(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("deleteUserResidencePrefecture", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.deleteUserResidencePrefecture(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("deleteUserDateOfBirth", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.deleteUserDateOfBirth(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("deleteUserAge", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.deleteUserAge(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("track", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.track(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("trackWithProperties", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.trackWithProperties(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("trackViewContent", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.trackViewContent(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("trackSearch", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.trackSearch(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("trackAddToCart", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.trackAddToCart(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("trackAddToWishlist", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.trackAddToWishlist(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("trackInitiateCheckout", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.trackInitiateCheckout(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("trackAddPaymentInfo", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.trackAddPaymentInfo(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("trackPurchase", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.trackPurchase(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("trackShare", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.trackShare(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("trackLead", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.trackLead(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("trackCompleteRegistration", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.trackCompleteRegistration(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("enableInAppMessagesOnForegroundTransition", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.enableInAppMessagesOnForegroundTransition(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("disableInAppMessagesOnForegroundTransition", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.disableInAppMessagesOnForegroundTransition(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("enablePushNotification", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.enablePushNotification(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("enablePushNotificationForIOS", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return true;
+            }
+        });
+        COMMAND_MAP.put("getUserID", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.getUserID(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("getDeviceID", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.getDeviceID(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("trackNotificationOpened", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.trackNotificationOpened(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("setSilverEggCookie", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.setSilverEggCookie(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("setSilverEggProdKey", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.setSilverEggProdKey(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("linkLineID", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.linkLineID(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("unlinkLineID", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.unlinkLineID(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("getNewsFeedsWithLimit", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.getNewsFeedsWithLimit(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("getNewsFeedsWithLimitAndOffsetId", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.getNewsFeedsWithLimitAndOffsetId(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("getNewsFeedsWithLimitAndCampaignType", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.getNewsFeedsWithLimitAndCampaignType(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("getNewsFeedsWithLimitAndOffsetIdAndCampaignType", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.getNewsFeedsWithLimitAndOffsetIdAndCampaignType(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("updateNewsFeeds", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.updateNewsFeeds(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("setOpenUrlCallback", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.setOpenUrlCallback(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("remoteConfig_fetch", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.remoteConfig_fetch(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("remoteConfig_activateFetched", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.remoteConfig_activateFetched(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("remoteConfig_setDefaultsFromJson", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.remoteConfig_setDefaultsFromJson(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("remoteConfig_setDefaultsFromJsonString", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.remoteConfig_setDefaultsFromJsonString(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("remoteConfig_getAllValues", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.remoteConfig_getAllValues(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("remoteConfig_getAllValuesWithPrefix", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.remoteConfig_getAllValuesWithPrefix(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("remoteConfig_getValue", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.remoteConfig_getValue(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("remoteConfig_getLocalDefaultValue", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.remoteConfig_getLocalDefaultValue(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("remoteConfig_forceReset", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.remoteConfig_forceReset(args, callbackContext);
+            }
+        });
+    }
 
     private static SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
 
@@ -58,161 +427,10 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
 
     @Override
     public boolean execute(final String action, final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
-        if ("setup".equals(action)) {
-            return setup(args, callbackContext);
+        CordovaReproCommand command = COMMAND_MAP.get(action);
+        if (command != null) {
+            return command.execute(this, args, callbackContext);
         }
-        else if ("optIn".equals(action)) {
-            return optIn(args, callbackContext);
-        }
-        else if ("setLogLevel".equals(action)) {
-            return setLogLevel(args, callbackContext);
-        }
-        else if ("setUserID".equals(action)) {
-            return setUserID(args, callbackContext);
-        }
-        else if ("setStringUserProfile".equals(action)) {
-            return setStringUserProfile(args, callbackContext);
-        }
-        else if ("setIntUserProfile".equals(action)) {
-            return setIntUserProfile(args, callbackContext);
-        }
-        else if ("setDoubleUserProfile".equals(action)) {
-            return setDoubleUserProfile(args, callbackContext);
-        }
-        else if ("setDateUserProfile".equals(action)) {
-            return setDateUserProfile(args, callbackContext);
-        }
-        else if ("setUserGender".equals(action)) {
-            return setUserGender(args, callbackContext);
-        }
-        else if ("setUserEmailAddress".equals(action)) {
-            return setUserEmailAddress(args, callbackContext);
-        }
-        else if ("setUserResidencePrefecture".equals(action)) {
-            return setUserResidencePrefecture(args, callbackContext);
-        }
-        else if ("setUserDateOfBirth".equals(action)) {
-            return setUserDateOfBirth(args, callbackContext);
-        }
-        else if ("setUserAge".equals(action)) {
-            return setUserAge(args, callbackContext);
-        }
-        else if ("track".equals(action)) {
-            return track(args, callbackContext);
-        }
-        else if ("trackWithProperties".equals(action)) {
-            return trackWithProperties(args, callbackContext);
-        }
-        else if ("trackViewContent".equals(action)) {
-            return trackViewContent(args, callbackContext);
-        }
-        else if ("trackSearch".equals(action)) {
-            return trackSearch(args, callbackContext);
-        }
-        else if ("trackAddToCart".equals(action)) {
-            return trackAddToCart(args, callbackContext);
-        }
-        else if ("trackAddToWishlist".equals(action)) {
-            return trackAddToWishlist(args, callbackContext);
-        }
-        else if ("trackInitiateCheckout".equals(action)) {
-            return trackInitiateCheckout(args, callbackContext);
-        }
-        else if ("trackAddPaymentInfo".equals(action)) {
-            return trackAddPaymentInfo(args, callbackContext);
-        }
-        else if ("trackPurchase".equals(action)) {
-            return trackPurchase(args, callbackContext);
-        }
-        else if ("trackShare".equals(action)) {
-            return trackShare(args, callbackContext);
-        }
-        else if ("trackLead".equals(action)) {
-            return trackLead(args, callbackContext);
-        }
-        else if ("trackCompleteRegistration".equals(action)) {
-            return trackCompleteRegistration(args, callbackContext);
-        }
-        else if ("enableInAppMessagesOnForegroundTransition".equals(action)) {
-            return enableInAppMessagesOnForegroundTransition(args, callbackContext);
-        }
-        else if ("disableInAppMessagesOnForegroundTransition".equals(action)) {
-            return disableInAppMessagesOnForegroundTransition(args, callbackContext);
-        }
-        else if ("enablePushNotification".equals(action)) {
-            return enablePushNotification(args, callbackContext);
-        }
-        else if ("enablePushNotificationForIOS".equals(action)) {
-            // do nothing
-            return true;
-        }
-        else if ("getUserID".equals(action)) {
-            return getUserID(args, callbackContext);
-        }
-        else if ("getDeviceID".equals(action)) {
-            return getDeviceID(args, callbackContext);
-        }
-        else if ("trackNotificationOpened".equals(action)) {
-            return trackNotificationOpened(args, callbackContext);
-        }
-        else if ("setSilverEggCookie".equals(action)) {
-            return setSilverEggCookie(args, callbackContext);
-        }
-        else if ("setSilverEggProdKey".equals(action)) {
-            return setSilverEggProdKey(args, callbackContext);
-        }
-        else if ("linkLineID".equals(action)) {
-            return linkLineID(args, callbackContext);
-        }
-        else if ("unlinkLineID".equals(action)) {
-            return unlinkLineID(args, callbackContext);
-        }
-        else if ("getNewsFeedsWithLimit".equals(action)) {
-            return getNewsFeedsWithLimit(args, callbackContext);
-        }
-        else if ("getNewsFeedsWithLimitAndOffsetId".equals(action)) {
-            return getNewsFeedsWithLimitAndOffsetId(args, callbackContext);
-        }
-        else if ("getNewsFeedsWithLimitAndCampaignType".equals(action)) {
-            return getNewsFeedsWithLimitAndCampaignType(args, callbackContext);
-        }
-        else if ("getNewsFeedsWithLimitAndOffsetIdAndCampaignType".equals(action)) {
-            return getNewsFeedsWithLimitAndOffsetIdAndCampaignType(args, callbackContext);
-        }
-        else if ("updateNewsFeeds".equals(action)) {
-            return updateNewsFeeds(args, callbackContext);
-        }
-        else if ("setOpenUrlCallback".equals(action)) {
-            return setOpenUrlCallback(args, callbackContext);
-        }
-        else if ("remoteConfig_fetch".equals(action)) {
-            return remoteConfig_fetch(args, callbackContext);
-        }
-        else if ("remoteConfig_activateFetched".equals(action)) {
-            return remoteConfig_activateFetched(args, callbackContext);
-        }
-        else if ("remoteConfig_setDefaultsFromJson".equals(action)) {
-            return remoteConfig_setDefaultsFromJson(args, callbackContext);
-        }
-        else if ("remoteConfig_setDefaultsFromJsonString".equals(action)) {
-            return remoteConfig_setDefaultsFromJsonString(args, callbackContext);
-        }
-        else if ("remoteConfig_getAllValues".equals(action)) {
-            return remoteConfig_getAllValues(args, callbackContext);
-        }
-        else if ("remoteConfig_getAllValuesWithPrefix".equals(action)) {
-            return remoteConfig_getAllValuesWithPrefix(args, callbackContext);
-        }
-        else if ("remoteConfig_getValue".equals(action)) {
-            return remoteConfig_getValue(args, callbackContext);
-        }
-        else if ("remoteConfig_getLocalDefaultValue".equals(action)) {
-            return remoteConfig_getLocalDefaultValue(args, callbackContext);
-        }
-        else if ("remoteConfig_forceReset".equals(action)) {
-            return remoteConfig_forceReset(args, callbackContext);
-        }
-
         return false;
     }
 
@@ -419,6 +637,279 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         callAPI(new API(callbackContext) {
             Void api() {
                 Repro.setUserAge(age);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean onlySetIfAbsentStringUserProfile(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final String key = args.getString(0);
+        final String value = args.getString(1);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.onlySetIfAbsentStringUserProfile(key, value);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean onlySetIfAbsentIntUserProfile(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final String key = args.getString(0);
+        final int value = args.getInt(1);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.onlySetIfAbsentIntUserProfile(key, value);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean onlySetIfAbsentDoubleUserProfile(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final String key = args.getString(0);
+        final double value = args.getDouble(1);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.onlySetIfAbsentDoubleUserProfile(key, value);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean onlySetIfAbsentDateUserProfile(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final String key = args.getString(0);
+        final long timestamp = args.getLong(1);
+        final Date date = new Date(timestamp);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.onlySetIfAbsentDateUserProfile(key, date);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean incrementIntUserProfileBy(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final String key = args.getString(0);
+        final int value = args.getInt(1);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.incrementIntUserProfileBy(key, value);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean decrementIntUserProfileBy(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final String key = args.getString(0);
+        final int value = args.getInt(1);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.decrementIntUserProfileBy(key, value);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean incrementDoubleUserProfileBy(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final String key = args.getString(0);
+        final double value = args.getDouble(1);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.incrementDoubleUserProfileBy(key, value);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean decrementDoubleUserProfileBy(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final String key = args.getString(0);
+        final double value = args.getDouble(1);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.decrementDoubleUserProfileBy(key, value);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean onlySetIfAbsentUserGender(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final int gender = args.getInt(0);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.onlySetIfAbsentUserGender(UserProfileGender.values()[gender]);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean onlySetIfAbsentUserEmailAddress(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final String email = args.getString(0);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.onlySetIfAbsentUserEmailAddress(email);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean onlySetIfAbsentUserResidencePrefecture(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final int prefecture = args.getInt(0);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.onlySetIfAbsentUserResidencePrefecture(UserProfilePrefecture.values()[prefecture - 1]);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean onlySetIfAbsentUserDateOfBirth(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final long value = args.getLong(0);
+        final Date date = new Date(value);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.onlySetIfAbsentUserDateOfBirth(date);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean onlySetIfAbsentUserAge(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final int age = args.getInt(0);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.onlySetIfAbsentUserAge(age);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean incrementUserAgeBy(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final int value = args.getInt(0);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.incrementUserAgeBy(value);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean decrementUserAgeBy(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final int value = args.getInt(0);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.decrementUserAgeBy(value);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean deleteUserProfile(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final String key = args.getString(0);
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.deleteUserProfile(key);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean deleteUserGender(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.deleteUserGender();
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean deleteUserEmailAddress(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.deleteUserEmailAddress();
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean deleteUserResidencePrefecture(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.deleteUserResidencePrefecture();
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean deleteUserDateOfBirth(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.deleteUserDateOfBirth();
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean deleteUserAge(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.deleteUserAge();
                 return null;
             }
         });

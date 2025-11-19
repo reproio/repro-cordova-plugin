@@ -46,7 +46,7 @@ import io.repro.android.user.UserProfilePrefecture;
  */
 public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
 
-    private static final String REPRO_CORDOVA_BRIDGE_VERSION = "6.24.3";
+    private static final String REPRO_CORDOVA_BRIDGE_VERSION = "6.24.4";
 
     private interface CordovaReproCommand {
         boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException;

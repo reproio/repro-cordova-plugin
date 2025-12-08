@@ -28,7 +28,7 @@ module.exports = function(context) {
     fs.writeFileSync(PATH, '#define CDVREPRO_ENABLE_SWIZZLING ' + value);
   }
 
-  var parser = new xml2js.Parser();
+  var parser = new xml2js.Parser({ignoreAttrs: true});
   var CONFIG_XML_PATH = path.join(context.opts.projectRoot, 'config.xml');
   var config = fs.readFileSync(CONFIG_XML_PATH, 'utf8');
 

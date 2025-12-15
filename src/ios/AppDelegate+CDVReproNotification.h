@@ -1,5 +1,5 @@
-#import "AppDelegate.h"
+#import <Cordova/CDVAppDelegate.h>
 
-@interface AppDelegate (CDVReproNotification)
+@interface CDVAppDelegate (CDVReproNotification)
 
 @end

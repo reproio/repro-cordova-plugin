@@ -3,7 +3,7 @@
 #import "Repro/Repro.h"
 #import <objc/runtime.h>
 
-@implementation AppDelegate (CDVReproNotification)
+@implementation CDVAppDelegate (CDVReproNotification)
 
 #if CDVREPRO_ENABLE_SWIZZLING
 

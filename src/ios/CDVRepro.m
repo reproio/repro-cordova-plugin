@@ -564,6 +564,28 @@ static NSDictionary* convertNSStringJSONToNSDictionary(NSString* json) {
   [Repro unlinkLineID:lineUserId lineChannelID:lineChannelId];
 }
 
+- (void)subscribeEmailChannel:(CDVInvokedUrlCommand*)command
+{
+  id channelId = [command.arguments objectAtIndex:0];
+  if (![channelId isKindOfClass:NSNumber.class]) {
+    NSLog(@"ERROR: Repro Didn't subscribe email channel: channel ID is required, and should be Number. null or undefined is not allowed.");
+    return;
+  }
+
+  [Repro subscribeEmailChannel:[channelId integerValue]];
+}
+
+- (void)unsubscribeEmailChannel:(CDVInvokedUrlCommand*)command
+{
+  id channelId = [command.arguments objectAtIndex:0];
+  if (![channelId isKindOfClass:NSNumber.class]) {
+    NSLog(@"ERROR: Repro Didn't unsubscribe email channel: channel ID is required, and should be Number. null or undefined is not allowed.");
+    return;
+  }
+
+  [Repro unsubscribeEmailChannel:[channelId integerValue]];
+}
+
 - (void)getNewsFeedsWithLimit:(CDVInvokedUrlCommand*)command
 {
   NSNumber* limit = [command.arguments objectAtIndex:0];

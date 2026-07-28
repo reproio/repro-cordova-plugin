@@ -238,6 +238,14 @@ Repro.prototype.unlinkLineID = function (lineUserId, lineChannelId, successCallb
     exec(successCallback, errorCallback, "Repro", "unlinkLineID", [lineUserId, lineChannelId]);
 };
 
+Repro.prototype.subscribeEmailChannel = function (channelId, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "subscribeEmailChannel", [channelId]);
+};
+
+Repro.prototype.unsubscribeEmailChannel = function (channelId, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Repro", "unsubscribeEmailChannel", [channelId]);
+};
+
 Repro.prototype.getNewsFeedsWithLimit = function (limit, successCallback, errorCallback) {
     exec(successCallback, errorCallback, "Repro", "getNewsFeedsWithLimit", [limit]);
 };

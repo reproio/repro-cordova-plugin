@@ -46,7 +46,7 @@ import io.repro.android.user.UserProfilePrefecture;
  */
 public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
 
-    private static final String REPRO_CORDOVA_BRIDGE_VERSION = "6.27.1";
+    private static final String REPRO_CORDOVA_BRIDGE_VERSION = "6.28.0";
 
     private interface CordovaReproCommand {
         boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException;
@@ -338,6 +338,16 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         COMMAND_MAP.put("unlinkLineID", new CordovaReproCommand() {
             public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
                 return plugin.unlinkLineID(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("subscribeEmailChannel", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.subscribeEmailChannel(args, callbackContext);
+            }
+        });
+        COMMAND_MAP.put("unsubscribeEmailChannel", new CordovaReproCommand() {
+            public boolean execute(CordovaPlugin plugin, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+                return plugin.unsubscribeEmailChannel(args, callbackContext);
             }
         });
         COMMAND_MAP.put("getNewsFeedsWithLimit", new CordovaReproCommand() {
@@ -1305,6 +1315,40 @@ public final class CordovaPlugin extends org.apache.cordova.CordovaPlugin {
         callAPI(new API(callbackContext) {
             Void api() {
                 Repro.unlinkLineID((String)lineUserId, (String)lineChannelId);
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean subscribeEmailChannel(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final Object channelId = args.opt(0);
+        if (!(channelId instanceof Number)) {
+            android.util.Log.e("Repro", "Didn't subscribe email channel: channel ID is required, and should be Number. null or undefined is not allowed.");
+            return true;
+        }
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.subscribeEmailChannel(((Number)channelId).longValue());
+                return null;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean unsubscribeEmailChannel(final CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        final Object channelId = args.opt(0);
+        if (!(channelId instanceof Number)) {
+            android.util.Log.e("Repro", "Didn't unsubscribe email channel: channel ID is required, and should be Number. null or undefined is not allowed.");
+            return true;
+        }
+
+        callAPI(new API(callbackContext) {
+            Void api() {
+                Repro.unsubscribeEmailChannel(((Number)channelId).longValue());
                 return null;
             }
         });

@@ -7,7 +7,7 @@
 
 #import <Cordova/CDV.h>
 
-#define REPRO_CORDOVA_BRIDGE_VERSION "6.29.0"
+#define REPRO_CORDOVA_BRIDGE_VERSION "6.29.1"
 
 @interface CDVRepro : CDVPlugin
 

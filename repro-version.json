@@ -1,5 +1,5 @@
 {
     "ios-sdk": "5.26.1",
-    "android-sdk": "5.26.1",
-    "bridge": "6.29.1"
+    "android-sdk": "5.26.2",
+    "bridge": "6.29.2"
 }
